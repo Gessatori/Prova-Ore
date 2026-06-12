@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supporto Cantieri - Tipologie Lavoro</title>
+  <style>
+    :root{
+      --bg:#f3f0ea;
+      --bg-soft:#faf8f3;
+      --paper:#fffefa;
+      --card:rgba(255,255,255,.92);
+      --text:#121826;
+      --muted:#6f7480;
+      --line:#e6dfd3;
+      --line-strong:#d8cdbb;
+      --navy:#071827;
+      --navy2:#0d2a45;
+      --blue:#0b63b6;
+      --gold:#c9a45c;
+      --gold-soft:#f3ead7;
+      --danger:#c2412d;
+      --success:#16745b;
+      --radius:22px;
+      --radius-sm:15px;
+      --shadow:0 24px 70px rgba(18,24,38,.10);
+      --shadow-soft:0 10px 30px rgba(18,24,38,.07);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,Helvetica,sans-serif;
+      color:var(--text);
+      min-height:100vh;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(201,164,92,.18), transparent 30%),
+        radial-gradient(circle at 88% 10%, rgba(11,99,182,.10), transparent 28%),
+        linear-gradient(135deg,var(--bg-soft),var(--bg));
+    }
+    body:before{
+      content:"";position:fixed;inset:0;pointer-events:none;opacity:.35;z-index:-1;
+      background-image:linear-gradient(rgba(7,24,39,.035) 1px, transparent 1px),linear-gradient(90deg,rgba(7,24,39,.035) 1px, transparent 1px);
+      background-size:38px 38px;
+      mask-image:linear-gradient(to bottom,black,transparent 78%);
+    }
+    header{
+      position:relative;overflow:hidden;color:#fff;padding:30px 22px 34px;
+      background:
+        linear-gradient(120deg,rgba(7,24,39,.97),rgba(13,42,69,.96) 58%,rgba(7,24,39,.98)),
+        radial-gradient(circle at top right,rgba(201,164,92,.35),transparent 42%);
+      border-bottom:1px solid rgba(255,255,255,.12);
+      box-shadow:0 22px 70px rgba(7,24,39,.25);
+    }
+    header:before{content:"";position:absolute;right:-150px;top:-180px;width:430px;height:430px;border-radius:999px;background:radial-gradient(circle,rgba(201,164,92,.24),transparent 68%)}
+    header:after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,transparent,var(--gold),#f6d58d,var(--gold),transparent)}
+    .hero{max-width:1500px;margin:0 auto;display:flex;align-items:center;gap:24px;position:relative;z-index:1}
+    .logo-card{
+      background:linear-gradient(180deg,#fff,#f9f6ef);border:1px solid rgba(255,255,255,.75);border-radius:20px;
+      padding:13px 18px;box-shadow:0 18px 40px rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;min-width:250px;
+    }
+    .logo-card img{display:block;max-width:270px;width:100%;height:auto}
+    .hero-text{display:flex;flex-direction:column;gap:10px;max-width:930px}
+    header h1{margin:0;font-size:clamp(30px,4.7vw,54px);letter-spacing:-.055em;line-height:.98;font-weight:850}
+    header p{margin:0;color:#dbe7f2;font-size:16px;max-width:900px;line-height:1.58}
+    .header-pills{display:flex;gap:9px;flex-wrap:wrap;margin-top:5px}
+    .header-pill{display:inline-flex;align-items:center;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);font-size:13px;color:#f7fbff;backdrop-filter:blur(10px)}
+    .header-pill:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(201,164,92,.18);margin-right:8px}
+    main{max-width:1500px;margin:0 auto;padding:24px 22px 34px}
+    .card{
+      position:relative;background:var(--card);border:1px solid rgba(230,223,211,.95);border-radius:var(--radius);padding:20px;margin-bottom:20px;
+      box-shadow:var(--shadow);backdrop-filter:blur(16px);
+    }
+    .card:before{content:"";position:absolute;left:18px;right:18px;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.9),transparent)}
+    h2{font-size:19px;margin:0 0 15px;letter-spacing:-.025em;display:flex;align-items:center;gap:10px;font-weight:830;color:#0f172a}
+    h2:before{content:"";width:7px;height:26px;border-radius:999px;background:linear-gradient(180deg,var(--gold),#f2d38a);box-shadow:0 8px 18px rgba(201,164,92,.28);display:inline-block}
+    h3{letter-spacing:-.015em;color:#111827}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .row{display:grid;grid-template-columns:repeat(5,1fr);gap:13px;align-items:end}
+    .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;align-items:end}
+    .totali-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:20px}
+    .lavorazioni-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .mini-card,.summary-item{
+      border:1px solid var(--line);border-radius:18px;padding:15px;background:linear-gradient(180deg,#fffefb,#f8f5ee);box-shadow:var(--shadow-soft);
+    }
+    .mini-card h3{margin:0 0 11px;font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:#182033}
+    .mini-card button{margin-top:10px}
+    .summary-box{display:grid;grid-template-columns:repeat(5,1fr);gap:13px;margin-top:14px}
+    .summary-item .label{font-size:11px;color:var(--muted);margin-bottom:7px;text-transform:uppercase;letter-spacing:.075em;font-weight:800}
+    .summary-item .value{font-size:25px;font-weight:880;letter-spacing:-.04em;color:#0f172a}
+    .negative{color:var(--danger)!important}.positive{color:var(--success)!important}
+    label{font-size:12px;color:#69707d;display:block;margin-bottom:7px;font-weight:760;letter-spacing:.015em}
+    input,select,button{
+      width:100%;padding:12px 13px;border:1px solid var(--line-strong);border-radius:13px;font-size:15px;background:#fffefa;color:var(--text);
+      outline:none;transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease,background .18s ease;
+    }
+    input:hover,select:hover{border-color:#c7bba8;background:#fff}
+    input:focus,select:focus{border-color:rgba(201,164,92,.95);box-shadow:0 0 0 4px rgba(201,164,92,.18);background:#fff}
+    button{
+      background:linear-gradient(135deg,var(--navy2),var(--navy));border-color:transparent;color:white;font-weight:850;cursor:pointer;
+      box-shadow:0 12px 24px rgba(7,24,39,.18);letter-spacing:.005em;
+    }
+    button:hover{transform:translateY(-1px);box-shadow:0 17px 32px rgba(7,24,39,.23)}
+    button.secondary{background:linear-gradient(135deg,#34465b,#121826);border-color:transparent}
+    button.danger{background:linear-gradient(135deg,#d95340,#9f2d22);border-color:transparent}
+    button.smallbtn{padding:8px 12px;font-size:13px;width:auto}
+    .hint{color:var(--muted);font-size:13px;line-height:1.55;margin:10px 0 0}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:13px}.actions button{width:auto}
+    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:18px;background:#fffefa;box-shadow:inset 0 1px 0 rgba(255,255,255,.9),var(--shadow-soft)}
+    table{border-collapse:separate;border-spacing:0;width:100%;min-width:1050px;background:#fffefa}
+    th,td{border-right:1px solid #ded6c8;border-bottom:1px solid #ded6c8;padding:10px;min-width:115px;text-align:right;height:40px}
+    th{background:linear-gradient(180deg,#142338,#071827);color:#fff;font-weight:850;font-size:13px;position:sticky;top:0;z-index:3;letter-spacing:.01em}
+    th:first-child,td:first-child{text-align:left;min-width:150px;position:sticky;left:0;z-index:2}
+    td:first-child{background:#faf7f0;color:#101828;font-weight:760;border-color:#ded6c8}
+    th:first-child{z-index:4;background:linear-gradient(180deg,#101d2e,#071827)}
+    tr:hover td{filter:brightness(.995)}
+    .small{min-width:900px}.small th,.small td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);text-align:left}.small td.num{text-align:right}
+    .tipo-intonaco{background:#fff5bf}.tipo-gesso{background:#d9f7d9}.tipo-isolazione{background:#ffd9d2}.tipo-cartongesso{background:#d8f6f5}.tipo-pittura{background:#f7d8eb}.tipo-artigiani{background:#f4e3b4}.tipo-dividere{background:#d7e8fb}.tipo-altro{background:#dcefd7}
+    th.tipo-intonaco,th.tipo-gesso,th.tipo-isolazione,th.tipo-cartongesso,th.tipo-pittura,th.tipo-artigiani,th.tipo-dividere,th.tipo-altro{color:#101828;text-shadow:none}
+    .total td{background:#f5e8bf!important;font-weight:880;color:#101828}
+    .badge{display:inline-block;background:var(--gold-soft);color:#82611e;border:1px solid #e2cd9b;border-radius:999px;padding:6px 11px;font-size:12px;margin-left:6px;font-weight:850}
+    .db-status{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fffefa;border-radius:999px;padding:8px 12px;font-size:13px;color:var(--muted);font-weight:760}
+    .db-dot{width:9px;height:9px;border-radius:999px;background:#9ca3af;box-shadow:0 0 0 3px rgba(156,163,175,.16)}
+    .db-status.ok .db-dot{background:var(--success);box-shadow:0 0 0 3px rgba(22,116,91,.16)}
+    .db-status.err .db-dot{background:var(--danger);box-shadow:0 0 0 3px rgba(194,65,45,.16)}
+
+    .section-divider{height:1px;background:linear-gradient(90deg,transparent,var(--line-strong),transparent);margin:19px 0}
+    .form-stack{display:grid;gap:17px}.form-panel{border:1px solid var(--line);border-radius:18px;padding:16px;background:rgba(250,247,240,.82);box-shadow:inset 0 1px 0 rgba(255,255,255,.75)}
+    .form-panel h3{margin:0 0 13px;font-size:18px}.safety-card{border:2px dashed rgba(194,65,45,.42);background:#fff8f5}.safety-card .actions{justify-content:flex-end}
+    .toggle-btn{width:auto;background:linear-gradient(135deg,#34465b,#121826);border-color:transparent;margin-top:4px}.collapsible-content{display:none;margin-top:13px}.collapsible-content.open{display:block}
+    @media(max-width:1100px){.summary-box{grid-template-columns:repeat(2,1fr)}.lavorazioni-grid{grid-template-columns:repeat(2,1fr)}.totali-grid{grid-template-columns:1fr}}
+    @media(max-width:950px){main{padding:15px}.hero{align-items:flex-start;flex-direction:column}.logo-card{min-width:0;width:100%;max-width:330px}.grid,.row,.row3,.totali-grid,.lavorazioni-grid,.summary-box{grid-template-columns:1fr}.actions button{width:100%}header{padding:24px 16px 28px}}
+    @media print{header,.actions,.toggle-btn,.safety-card{display:none!important}body{background:white}.card{box-shadow:none;border:1px solid #ddd;break-inside:avoid}main{padding:0}.card:before{display:none}}
+  </style>
+  <script src="config.js"></script>
+</head>
+<body>
+<header>
+  <div class="hero">
+    <div class="logo-card">
+      <img src="https://tecnoplafon.ch/wp-content/uploads/2019/08/TECNOPLAFON-logo_v01.png" alt="Tecnoplafon SA" />
+    </div>
+    <div class="hero-text">
+      <h1>Gestione Cantieri</h1>
+      <p>Un pannello elegante per controllare ore, materiali, lavorazioni, totali e margini dei cantieri Tecnoplafon.</p>
+      <div class="header-pills">
+        <span class="header-pill">Riepilogo cantieri</span>
+        <span class="header-pill">Ore e materiali</span>
+        <span class="header-pill">Margini automatici</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section class="card">
+    <h2>Database Supabase</h2>
+    <div class="row3">
+      <div>
+        <label for="supabaseUrl">Supabase URL</label>
+        <input id="supabaseUrl" placeholder="https://xxxxx.supabase.co" value="https://rmsrhtqtmcmgotgiediu.supabase.co" />
+      </div>
+      <div>
+        <label for="supabaseAnonKey">Supabase anon key</label>
+        <input id="supabaseAnonKey" placeholder="eyJhbGciOi..." />
+      </div>
+      <button onclick="salvaSupabaseConfig()">Collega database</button>
+    </div>
+    <div class="actions">
+      <button class="secondary" onclick="caricaDaSupabase(true)">Carica da Supabase</button>
+      <button class="secondary" onclick="sincronizzaSuSupabase(true)">Salva ora su Supabase</button>
+      <span id="dbStatus" class="db-status"><span class="db-dot"></span><span>Locale: dati salvati su questo Mac</span></span>
+    </div>
+    <p class="hint">Dopo aver incollato URL e anon key del progetto, i dati vengono salvati anche nel database Supabase. Il salvataggio locale resta attivo come backup.</p>
+  </section>
+  <section class="card">
+    <h2>Aggiungi cantiere</h2>
+    <div class="row3">
+      <div>
+        <label for="nuovoCantiere">Nome cantiere</label>
+        <input id="nuovoCantiere" placeholder="Es. Lugano, Paradiso..." />
+      </div>
+      <div>
+        <label for="nuovoCostoOra">Costo ora CHF</label>
+        <input id="nuovoCostoOra" type="number" value="60" min="0" step="0.05" />
+      </div>
+      <button onclick="aggiungiCantiere()">Aggiungi cantiere</button>
+    </div>
+    <p class="hint">Crea il cantiere e poi inserisci subito ore e materiali nel blocco sotto.</p>
+  </section>
+
+  <div class="grid">
+    <section class="card">
+      <h2>Cantiere attivo</h2>
+      <div class="row3">
+        <div>
+          <label for="cantiereAttivo">Cantiere</label>
+          <select id="cantiereAttivo" onchange="cambiaCantiere()"></select>
+        </div>
+        <div>
+          <label for="costoOra">Costo ora CHF</label>
+          <input id="costoOra" type="number" value="60" min="0" step="0.05" onchange="salvaCostoOra()" />
+        </div>
+        <button class="secondary" onclick="terminaCantiere()">Termina cantiere</button>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <div class="form-stack">
+        <div class="form-panel">
+          <h3>Aggiungi materiale</h3>
+          <div class="row">
+            <div><label>Data</label><input id="dataMat" type="date" /></div>
+            <div><label>Cantiere</label><input id="cantiereMat" placeholder="Nome cantiere" /></div>
+            <div><label>Materiale</label><input id="materiale" placeholder="Es. lastre, rasante..." /></div>
+            <div><label>Tipo materiale</label><select id="tipoMat"></select></div>
+            <div><label>Costo CHF</label><input id="costoMat" type="number" min="0" step="0.05" /></div>
+          </div>
+          <div class="actions"><button onclick="aggiungiMateriale()">Aggiungi materiale</button></div>
+        </div>
+
+        <div class="form-panel">
+          <h3>Aggiungi ore manualmente</h3>
+          <div class="row">
+            <div><label>Data</label><input id="dataOre" type="date" /></div>
+            <div><label>Cantiere</label><input id="cantiereOre" placeholder="Nome cantiere" /></div>
+            <div><label>Operaio</label><input id="operaio" placeholder="Nome operaio" /></div>
+            <div><label>Tipo lavorazione</label><select id="tipoOre"></select></div>
+            <div><label>Ore totali aggiornate</label><input id="ore" type="number" min="0" step="0.25" /></div>
+          </div>
+          <p class="hint">Inserisci il totale aggiornato dell'operaio per quel cantiere e tipo lavorazione. Esempio: Antonio aveva 25 ore; se inserisci 50, il programma registra solo +25 e il totale diventa 50.</p>
+          <div class="actions"><button onclick="aggiungiOreManuali()">Aggiungi ore</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Importa ore dal tracciamento</h2>
+      <input id="csvOre" type="file" accept=".csv" />
+      <div class="actions">
+        <button onclick="sincronizzaOreGestionale(true)">Importa ore dal gestionale</button>
+        <button class="secondary" onclick="importaOreCSV()">Importa CSV ore</button>
+        <button class="secondary" onclick="scaricaModelloOre()">Scarica modello CSV ore</button>
+      </div>
+      <div id="syncOreGestionaleMsg" class="hint">Le ore segnate dai collaboratori nel gestionale vengono lette da Supabase e portate qui dentro.</div>
+      <p class="hint">
+        Sincronizzazione automatica: cantiere, operaio, ore e lavorazione vengono copiati dal tracciamento ore.
+        Il CSV resta disponibile solo come importazione manuale di emergenza.
+      </p>
+      <div class="section-divider"></div>
+      <h2>Come si collega al tracciamento ore</h2>
+      <p class="hint">
+        Premi <b>Importa ore dal gestionale</b> oppure apri questa pagina: il supporto cantieri legge le righe salvate in
+        <b>ore_lavoro</b> e aggiorna automaticamente i totali dei cantieri.
+      </p>
+    </section>
+  </div>
+
+  <section class="card">
+    <h2>Riepilogo cantiere <span id="badgeCantiere" class="badge"></span></h2>
+    <div class="table-wrap"><table id="riepilogo"></table></div>
+    <div class="actions">
+      <button class="secondary" onclick="esportaRiepilogoCSV()">Esporta riepilogo CSV</button>
+      <button class="secondary" onclick="window.print()">Stampa</button>
+    </div>
+  </section>
+
+  <div class="totali-grid">
+    <section class="card">
+      <h2>Totale generale cantiere</h2>
+      <div class="row3">
+        <div>
+          <label for="totaleGenerale">Totale cantiere CHF</label>
+          <input id="totaleGenerale" type="number" min="0" step="0.05" oninput="aggiornaTotaleGeneraleLive()" />
+        </div>
+        <button onclick="salvaTotaleGenerale()">Salva totale cantiere</button>
+        <button class="secondary" onclick="usaSommaLavorazioni()">Usa somma lavorazioni</button>
+      </div>
+      <p class="hint">Qui inserisci il totale generale del cantiere. Ore, materiali, margine e percentuale si aggiornano automaticamente.</p>
+      <div class="summary-box" id="riepilogoTotaleGenerale"></div>
+    </section>
+
+    <section class="card">
+      <h2>Totali per ogni lavorazione</h2>
+      <div class="lavorazioni-grid" id="totaliLavorazioni"></div>
+      <p class="hint">Quando inserisci il totale di una lavorazione, viene scalato dal totale generale, ma la lista resta pulita.</p>
+    </section>
+  </div>
+
+  <div class="grid">
+    <section class="card">
+      <h2>Ore importate / inserite</h2>
+      <div class="table-wrap"><table class="small" id="dettaglioOre"></table></div>
+    </section>
+    <section class="card">
+      <h2>Materiali inseriti</h2>
+      <div class="table-wrap"><table class="small" id="dettaglioMateriali"></table></div>
+    </section>
+  </div>
+
+  <section class="card">
+    <h2>Tabella operai</h2>
+    <div class="table-wrap"><table class="small" id="tabellaOperai"></table></div>
+    <p class="hint">Qui vedi le ore divise per operaio nel cantiere attivo.</p>
+  </section>
+
+  <div class="grid">
+    <section class="card">
+      <h2>Tutti i cantieri con totali</h2>
+      <button class="toggle-btn" id="btnTuttiCantieri" onclick="toggleSezione('boxTuttiCantieri','btnTuttiCantieri','tutti i cantieri')">Mostra tutti i cantieri</button>
+      <div class="collapsible-content" id="boxTuttiCantieri">
+        <div class="table-wrap"><table class="small" id="tuttiCantieri"></table></div>
+        <p class="hint">Qui vedi solo i cantieri attivi. Quando termini un cantiere, passa nella lista annua.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Cantieri terminati - lista annua</h2>
+      <button class="toggle-btn" id="btnCantieriTerminati" onclick="toggleSezione('boxCantieriTerminati','btnCantieriTerminati','cantieri terminati')">Mostra cantieri terminati</button>
+      <div class="collapsible-content" id="boxCantieriTerminati">
+        <div class="table-wrap"><table class="small" id="cantieriTerminatiAnnui"></table></div>
+        <p class="hint">I cantieri chiusi restano salvati qui per anno. Puoi riattivarli se devi correggere qualcosa.</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="card safety-card">
+    <h2>Zona sicurezza</h2>
+    <p class="hint">Questo pulsante cancella tutti i dati del supporto. Lo lascio qui in fondo, lontano dai campi di lavoro, per evitare errori.</p>
+    <div class="actions">
+      <button class="danger" onclick="resetDati()">Cancella dati supporto</button>
+    </div>
+  </section>
+</main>
+
+<script>
+const TIPI = [
+  {key:"intonaco", label:"INTONACO", cls:"tipo-intonaco", words:["intonaco","intonacatura"]},
+  {key:"gesso", label:"Gesso", cls:"tipo-gesso", words:["gesso","rasatura","stabilitura"]},
+  {key:"isolazione", label:"ISOLAZIONE", cls:"tipo-isolazione", words:["isolazione","isolamento","cappotto","lana","eps"]},
+  {key:"cartongesso", label:"COSTRUZIONE A SECCO", cls:"tipo-cartongesso", words:["cartongesso","costruzione a secco","costruzione","secco","lastre","parete","controsoffitto","soffitto"]},
+  {key:"pittura", label:"PITTURA", cls:"tipo-pittura", words:["pittura","imbiancatura","vernice","colore"]},
+  {key:"artigiani", label:"Artigiani", cls:"tipo-artigiani", words:["artigiani","subappalto","elettricista","idraulico"]},
+  {key:"dividere", label:"DIVIDERE", cls:"tipo-dividere", words:["dividere","ripartire","generale"]},
+  {key:"altro", label:"REGIA", cls:"tipo-altro", words:["altro","regia","regie"]}
+];
+
+let stato = JSON.parse(localStorage.getItem("supporto_cantieri_tipologie_v1") || "null") || {
+  ore: [],
+  materiali: [],
+  preventivi: {},
+  costiOra: {},
+  cantiereAttivo: "",
+  cantieriManuali: [],
+  totaliGenerali: {},
+  cantieriTerminati: {}
+};
+if(!Array.isArray(stato.cantieriManuali)) stato.cantieriManuali = [];
+if(!stato.totaliGenerali || typeof stato.totaliGenerali !== "object") stato.totaliGenerali = {};
+if(!stato.cantieriTerminati || typeof stato.cantieriTerminati !== "object") stato.cantieriTerminati = {};
+
+function oggi(){ return new Date().toISOString().slice(0,10); }
+document.getElementById("dataOre").value = oggi();
+document.getElementById("dataMat").value = oggi();
+
+let dbClient = null;
+let dbPronto = false;
+let caricamentoRemotoInCorso = false;
+let syncTimer = null;
+const DB_TABLE = "supporto_cantieri_state";
+const DB_ID = "tecnoplafon_main";
+
+function pulisciSupabaseUrl(url){
+  return String(url || "").trim().replace(/\/+$/, "").replace(/\/rest\/v1$/i, "");
+}
+
+function setDbStatus(testo, tipo){
+  const el = document.getElementById("dbStatus");
+  if(!el) return;
+  el.classList.remove("ok","err");
+  if(tipo) el.classList.add(tipo);
+  const span = el.querySelector("span:last-child");
+  if(span) span.textContent = testo;
+}
+
+function salva(){
+  localStorage.setItem("supporto_cantieri_tipologie_v1", JSON.stringify(stato));
+  if(dbPronto && !caricamentoRemotoInCorso){
+    clearTimeout(syncTimer);
+    syncTimer = setTimeout(()=>sincronizzaSuSupabase(false), 700);
+  }
+}
+
+function salvaSupabaseConfig(){
+  const url = pulisciSupabaseUrl(document.getElementById("supabaseUrl").value);
+  const key = document.getElementById("supabaseAnonKey").value.trim();
+  if(!url || !key){ alert("Inserisci Supabase URL e anon key."); return; }
+  document.getElementById("supabaseUrl").value = url;
+  localStorage.setItem("supporto_cantieri_supabase_url", url);
+  localStorage.setItem("supporto_cantieri_supabase_anon_key", key);
+  connettiSupabase(url, key, true);
+}
+
+function avviaSupabaseDaConfig(){
+  const cfg = window.TECNOPLAFON_CONFIG || {};
+  const savedUrl = localStorage.getItem("supporto_cantieri_supabase_url") || "";
+  const savedKey = localStorage.getItem("supporto_cantieri_supabase_anon_key") || "";
+  const configUrl = cfg.SUPABASE_URL || "";
+  const configKey = cfg.SUPABASE_ANON_KEY || "";
+  const url = pulisciSupabaseUrl(savedUrl || configUrl || "https://sbrbebmmjhslssbqmitck.supabase.co");
+  const key = savedKey || configKey || "";
+  const urlEl = document.getElementById("supabaseUrl");
+  const keyEl = document.getElementById("supabaseAnonKey");
+  if(urlEl) urlEl.value = url;
+  if(keyEl) keyEl.value = key;
+  if(url && key){
+    localStorage.setItem("supporto_cantieri_supabase_url", url);
+    localStorage.setItem("supporto_cantieri_supabase_anon_key", key);
+    connettiSupabase(url, key, false);
+  }
+}
+
+async function supabaseRest(path, options){
+  const url = dbClient.url + "/rest/v1/" + path;
+  const headers = Object.assign({
+    "apikey": dbClient.key,
+    "Authorization": "Bearer " + dbClient.key,
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+  }, (options && options.headers) || {});
+  let res;
+  try{
+    res = await fetch(url, Object.assign({}, options || {}, {headers}));
+  }catch(err){
+    throw new Error("Connessione bloccata o URL non raggiungibile. Controlla URL, internet e Data API. Dettaglio: " + err.message);
+  }
+  const text = await res.text();
+  let data = null;
+  if(text){ try{ data = JSON.parse(text); }catch(e){ data = text; } }
+  if(!res.ok){
+    const msg = data && data.message ? data.message : (typeof data === "string" ? data : res.statusText);
+    throw new Error("HTTP " + res.status + ": " + msg);
+  }
+  return data;
+}
+
+async function connettiSupabase(url, key, caricaSubito){
+  try{
+    url = pulisciSupabaseUrl(url);
+    dbClient = {url, key};
+    dbPronto = true;
+    setDbStatus("Supabase collegato - controllo dati...", "ok");
+    if(caricaSubito){
+      await caricaDaSupabase(true);
+    } else {
+      await caricaDaSupabase(false);
+    }
+  }catch(err){
+    dbPronto = false;
+    setDbStatus("Errore Supabase: " + err.message, "err");
+    if(caricaSubito) alert("Errore Supabase: " + err.message);
+  }
+}
+
+async function caricaDaSupabase(mostraAlert){
+  if(!dbPronto || !dbClient){ if(mostraAlert) alert("Prima collega Supabase."); return; }
+  try{
+    caricamentoRemotoInCorso = true;
+    const path = DB_TABLE + "?select=stato&id=eq." + encodeURIComponent(DB_ID) + "&limit=1";
+    const data = await supabaseRest(path, {method:"GET"});
+    if(Array.isArray(data) && data.length && data[0].stato){
+      stato = data[0].stato;
+      if(!Array.isArray(stato.cantieriManuali)) stato.cantieriManuali = [];
+      if(!stato.totaliGenerali || typeof stato.totaliGenerali !== "object") stato.totaliGenerali = {};
+      if(!stato.cantieriTerminati || typeof stato.cantieriTerminati !== "object") stato.cantieriTerminati = {};
+      localStorage.setItem("supporto_cantieri_tipologie_v1", JSON.stringify(stato));
+      render();
+      setDbStatus("Dati caricati da Supabase", "ok");
+      await sincronizzaOreGestionale(false);
+      if(mostraAlert) alert("Dati caricati da Supabase.");
+    } else {
+      await sincronizzaSuSupabase(false);
+      await sincronizzaOreGestionale(false);
+      if(mostraAlert) alert("Database inizializzato con i dati locali.");
+    }
+  }catch(err){
+    setDbStatus("Errore caricamento: " + err.message, "err");
+    if(mostraAlert) alert("Errore caricamento Supabase: " + err.message);
+  }finally{
+    caricamentoRemotoInCorso = false;
+  }
+}
+
+async function sincronizzaSuSupabase(mostraAlert){
+  if(!dbPronto || !dbClient){ if(mostraAlert) alert("Prima collega Supabase."); return; }
+  try{
+    const payload = { id: DB_ID, stato, updated_at: new Date().toISOString() };
+    await supabaseRest(DB_TABLE, {
+      method: "POST",
+      headers: {"Prefer":"resolution=merge-duplicates"},
+      body: JSON.stringify(payload)
+    });
+    setDbStatus("Salvato su Supabase", "ok");
+    if(mostraAlert) alert("Dati salvati su Supabase.");
+  }catch(err){
+    setDbStatus("Errore salvataggio: " + err.message, "err");
+    if(mostraAlert) alert("Errore salvataggio Supabase: " + err.message);
+  }
+}
+
+function toggleSezione(boxId, btnId, nome){
+  const box = document.getElementById(boxId);
+  const btn = document.getElementById(btnId);
+  if(!box || !btn) return;
+  const aperto = box.classList.toggle("open");
+  btn.textContent = aperto ? "Nascondi " + nome : "Mostra " + nome;
+}
+
+function normalizzaTipo(v){
+  const s = String(v || "").trim().toLowerCase();
+  const n = s.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+
+  // IMPORTANTE: controllare prima "costruzione a secco/cartongesso".
+  // Nel gestionale puo arrivare scritto anche male, tipo "costruzione a gesso":
+  // non deve finire nella categoria Gesso solo perche contiene la parola "gesso".
+  if(
+    n.includes("costruzione a secco") ||
+    n.includes("costruzioni a secco") ||
+    n.includes("costruzione secco") ||
+    n.includes("costruzione a gesso") ||
+    n.includes("costruzioni a gesso") ||
+    n.includes("cartongesso") ||
+    n.includes("lastr") ||
+    n.includes("parete") ||
+    n.includes("controsoffitto") ||
+    n.includes("soffitto")
+  ) return "cartongesso";
+
+  for(const t of TIPI){
+    if(t.key === s) return t.key;
+    if(t.label.toLowerCase() === s) return t.key;
+    if(t.words.some(w => n.includes(w))) return t.key;
+  }
+  return "altro";
+}
+
+function popolaTipo(id){
+  document.getElementById(id).innerHTML = TIPI.map(t=>`<option value="${t.key}">${t.label}</option>`).join("");
+}
+["tipoOre","tipoMat"].forEach(popolaTipo);
+
+function cantieriTutti(){
+  const set = new Set();
+  (stato.cantieriManuali || []).forEach(c=>set.add(c));
+  stato.ore.forEach(r=>set.add(r.cantiere));
+  stato.materiali.forEach(r=>set.add(r.cantiere));
+  Object.keys(stato.preventivi).forEach(c=>set.add(c));
+  Object.keys(stato.cantieriTerminati || {}).forEach(c=>set.add(c));
+  return Array.from(set).filter(Boolean).sort();
+}
+
+function isTerminato(c){ return !!(stato.cantieriTerminati || {})[c]; }
+function cantieri(){ return cantieriTutti().filter(c=>!isTerminato(c)); }
+
+function assicuratiCantiere(nome){
+  if(!nome) return;
+  if(!stato.preventivi[nome]){
+    stato.preventivi[nome] = {};
+    TIPI.forEach(t=>stato.preventivi[nome][t.key]=0);
+  }
+  if(!stato.costiOra[nome]) stato.costiOra[nome] = 60;
+  if(stato.totaliGenerali[nome] == null) stato.totaliGenerali[nome] = 0;
+  if(!stato.cantiereAttivo) stato.cantiereAttivo = nome;
+}
+
+function aggiungiCantiere(){
+  const nome = document.getElementById("nuovoCantiere").value.trim();
+  const costo = Number(document.getElementById("nuovoCostoOra").value) || 60;
+  if(!nome){ alert("Inserisci il nome del cantiere."); return; }
+  if(!(stato.cantieriManuali || []).includes(nome)) stato.cantieriManuali.push(nome);
+  assicuratiCantiere(nome);
+  if(stato.cantieriTerminati && stato.cantieriTerminati[nome]) delete stato.cantieriTerminati[nome];
+  stato.costiOra[nome] = costo;
+  stato.cantiereAttivo = nome;
+  document.getElementById("nuovoCantiere").value = "";
+  document.getElementById("nuovoCostoOra").value = "60";
+  salva(); render();
+}
+
+function cambiaCantiere(){
+  stato.cantiereAttivo = document.getElementById("cantiereAttivo").value;
+  salva(); render();
+}
+
+function terminaCantiere(){
+  const c = stato.cantiereAttivo;
+  if(!c){ alert("Nessun cantiere attivo da terminare."); return; }
+  if(!confirm("Terminare il cantiere '" + c + "'? Non verra cancellato: andra nella lista annua.")) return;
+  if(!(stato.cantieriManuali || []).includes(c)) stato.cantieriManuali.push(c);
+  const data = oggi();
+  stato.cantieriTerminati[c] = {data:data, anno:Number(data.slice(0,4))};
+  stato.cantiereAttivo = cantieri().find(x=>x !== c) || "";
+  salva(); render();
+}
+
+function riattivaCantiere(c){
+  if(stato.cantieriTerminati && stato.cantieriTerminati[c]) delete stato.cantieriTerminati[c];
+  stato.cantiereAttivo = c;
+  salva(); render();
+}
+
+function salvaCostoOra(){
+  const c = stato.cantiereAttivo;
+  if(!c) return;
+  stato.costiOra[c] = Number(document.getElementById("costoOra").value) || 60;
+  salva(); render();
+}
+
+function aggiungiOreManuali(){
+  const r = {
+    data: document.getElementById("dataOre").value || oggi(),
+    cantiere: document.getElementById("cantiereOre").value.trim(),
+    operaio: document.getElementById("operaio").value.trim(),
+    tipo: document.getElementById("tipoOre").value,
+    ore: Number(document.getElementById("ore").value) || 0,
+    origine: "manuale_totale"
+  };
+  if(!r.cantiere || !r.operaio || r.ore <= 0){ alert("Inserisci cantiere, operaio e ore."); return; }
+  assicuratiCantiere(r.cantiere);
+
+  // Il valore inserito manualmente viene trattato come totale aggiornato,
+  // non come ore da sommare. Esempio: Antonio 25, poi Antonio 50 => resta 50.
+  const operaioKey = r.operaio.trim().toLowerCase();
+  let sostituito = false;
+  stato.ore = stato.ore.filter(x => {
+    const stessaRiga = x.cantiere === r.cantiere &&
+      String(x.operaio || "").trim().toLowerCase() === operaioKey &&
+      x.tipo === r.tipo;
+    if(stessaRiga) sostituito = true;
+    return !stessaRiga;
+  });
+  stato.ore.push(r);
+
+  document.getElementById("ore").value = "";
+  salva(); render();
+  if(sostituito){ alert("Ore aggiornate: il totale di " + r.operaio + " per questa lavorazione ora e " + fmt(r.ore) + "."); }
+}
+
+function aggiungiMateriale(){
+  const r = {
+    data: document.getElementById("dataMat").value || oggi(),
+    cantiere: document.getElementById("cantiereMat").value.trim(),
+    descrizione: document.getElementById("materiale").value.trim(),
+    tipo: document.getElementById("tipoMat").value,
+    costo: Number(document.getElementById("costoMat").value) || 0
+  };
+  if(!r.cantiere || !r.descrizione){ alert("Inserisci cantiere e materiale."); return; }
+  assicuratiCantiere(r.cantiere);
+  stato.materiali.push(r);
+  document.getElementById("materiale").value = "";
+  document.getElementById("costoMat").value = "";
+  salva(); render();
+}
+
+function salvaPreventivo(tipo, valore){
+  const c = stato.cantiereAttivo;
+  if(!c){ alert("Prima seleziona o inserisci un cantiere."); return; }
+  assicuratiCantiere(c);
+  const v = valore != null ? valore : Number((document.getElementById("prev_" + tipo) || {}).value) || 0;
+  stato.preventivi[c][tipo] = v;
+  salva();
+  renderTotaleGenerale();
+  renderRiepilogo();
+  renderTuttiCantieri();
+}
+
+function aggiornaCostoLavorazioneLive(tipo){
+  const c = stato.cantiereAttivo;
+  if(!c) return;
+  assicuratiCantiere(c);
+  const el = document.getElementById("prev_" + tipo);
+  stato.preventivi[c][tipo] = Number((el || {}).value) || 0;
+  salva();
+  renderTotaleGenerale();
+  renderRiepilogo();
+  renderTuttiCantieri();
+}
+
+function aggiornaTotaleGeneraleLive(){
+  const c = stato.cantiereAttivo;
+  if(!c) return;
+  assicuratiCantiere(c);
+  stato.totaliGenerali[c] = Number(document.getElementById("totaleGenerale").value) || 0;
+  salva();
+  renderTotaleGenerale();
+  renderRiepilogo();
+  renderTuttiCantieri();
+}
+
+function salvaTotaleGenerale(){
+  const c = stato.cantiereAttivo;
+  if(!c){ alert("Prima seleziona o inserisci un cantiere."); return; }
+  assicuratiCantiere(c);
+  stato.totaliGenerali[c] = Number(document.getElementById("totaleGenerale").value) || 0;
+  salva(); render();
+}
+
+function usaSommaLavorazioni(){
+  const c = stato.cantiereAttivo;
+  if(!c){ alert("Prima seleziona o inserisci un cantiere."); return; }
+  assicuratiCantiere(c);
+  stato.totaliGenerali[c] = sommaPreventivi(c);
+  salva(); render();
+}
+
+
+function nomeCantiereDaGestionale(r){
+  const c = r.cantieri || {};
+  return String(`${c.codice || ""} ${c.nome || ""}`.trim() || r.cantiere || "").trim();
+}
+
+function nomeOperaioDaGestionale(r){
+  const c = r.collaboratori || {};
+  return String(`${c.cognome || ""} ${c.nome || ""}`.trim() || r.operaio || "").trim();
+}
+
+function setSyncOreMsg(testo, tipo){
+  const el = document.getElementById("syncOreGestionaleMsg");
+  if(!el) return;
+  const cls = tipo === "error" ? "error" : (tipo === "success" ? "success" : "hint");
+  el.className = cls;
+  el.textContent = testo;
+}
+
+async function sincronizzaOreGestionale(mostraAlert){
+  if(!dbPronto || !dbClient){
+    setSyncOreMsg("Supabase non collegato: controlla config.js oppure premi Collega database.", "error");
+    if(mostraAlert) alert("Prima collega Supabase.");
+    return;
+  }
+  try{
+    setSyncOreMsg("Importazione ore dal gestionale in corso...", "hint");
+    const path = "ore_lavoro?select=id,data,ore_totali,note,stato,cantieri(codice,nome),collaboratori(nome,cognome),lavorazioni(nome)&order=data.asc&limit=5000";
+    const rows = await supabaseRest(path, {method:"GET"});
+    if(!Array.isArray(rows)) throw new Error("Risposta Supabase non valida per ore_lavoro.");
+
+    const nuoveOre = [];
+    let saltate = 0;
+    rows.forEach(r=>{
+      if(String(r.stato || "attivo") === "annullato") return;
+      const cantiere = nomeCantiereDaGestionale(r);
+      const operaio = nomeOperaioDaGestionale(r);
+      const ore = Number(r.ore_totali || 0);
+      const tipo = normalizzaTipo(r.lavorazioni && r.lavorazioni.nome ? r.lavorazioni.nome : "altro");
+      if(cantiere && operaio && ore > 0){
+        assicuratiCantiere(cantiere);
+        nuoveOre.push({
+          data: r.data || oggi(),
+          cantiere,
+          operaio,
+          tipo,
+          ore,
+          origine: "gestionale_ore",
+          id_ore_lavoro: r.id || ""
+        });
+      } else {
+        saltate++;
+      }
+    });
+
+    // Sostituisce solo le righe arrivate dal gestionale: le ore manuali e i CSV restano intatti.
+    stato.ore = (stato.ore || []).filter(x => x.origine !== "gestionale_ore");
+    stato.ore.push(...nuoveOre);
+    salva();
+    render();
+    const testo = "Importate " + nuoveOre.length + " righe ore dal gestionale" + (saltate ? ". Righe saltate: " + saltate + "." : ".");
+    setSyncOreMsg(testo, "success");
+    if(mostraAlert) alert(testo);
+  }catch(err){
+    const testo = "Errore importazione ore dal gestionale: " + err.message;
+    setSyncOreMsg(testo, "error");
+    if(mostraAlert) alert(testo);
+  }
+}
+window.sincronizzaOreGestionale = sincronizzaOreGestionale;
+
+function parseCSV(text){
+  const rows = [];
+  let row = [], field = "", quoted = false;
+  for(let i=0;i<text.length;i++){
+    const ch = text[i], next = text[i+1];
+    if(ch === '"' && quoted && next === '"'){ field += '"'; i++; }
+    else if(ch === '"'){ quoted = !quoted; }
+    else if((ch === ";" || ch === ",") && !quoted){ row.push(field); field = ""; }
+    else if((ch === "\n" || ch === "\r") && !quoted){
+      if(ch === "\r" && next === "\n") i++;
+      row.push(field); rows.push(row); row=[]; field="";
+    } else field += ch;
+  }
+  if(field || row.length){ row.push(field); rows.push(row); }
+  return rows.filter(r=>r.some(c=>String(c).trim() !== ""));
+}
+
+function importaOreCSV(){
+  const file = document.getElementById("csvOre").files[0];
+  if(!file){ alert("Scegli un file CSV."); return; }
+  const reader = new FileReader();
+  reader.onload = () => {
+    const rows = parseCSV(reader.result);
+    if(rows.length < 2){ alert("CSV vuoto."); return; }
+
+    const pulisci = (v) => String(v || "")
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
+    const header = rows[0].map(pulisci);
+    const idx = (names) => header.findIndex(h => names.some(n => h.includes(pulisci(n))));
+
+    // Colonne normali + colonne del tuo CSV Hub:
+    // Date, Employe, Mandat, Processus, Quantite, Remarque
+    const iC = idx(["cantiere","commessa","progetto","mandat","mandato"]);
+    const iO = idx(["operaio","collaboratore","dipendente","nome","employe","employee"]);
+    const iOre = idx(["ore","ora","quantite","quantita","quantity","qty"]);
+    const iTipo = idx(["tipo","lavorazione","categoria","processus","processo"]);
+    const iData = idx(["data","giorno","date"]);
+
+    if(iC < 0 || iO < 0 || iOre < 0){
+      alert("Non riesco a importare: servono almeno Cantiere/Mandat, Operaio/Employe e Ore/Quantite.");
+      return;
+    }
+
+    let count = 0;
+    let saltate = 0;
+    rows.slice(1).forEach(r=>{
+      const cantiere = String(r[iC] || "").trim();
+      const operaio = String(r[iO] || "").trim();
+      const oreRaw = String(r[iOre] || "0").replace("'", "").replace(",", ".").trim();
+      const ore = Number(oreRaw);
+      const tipo = iTipo >= 0 ? normalizzaTipo(r[iTipo]) : "altro";
+      const data = iData >= 0 ? String(r[iData] || oggi()).trim() : oggi();
+      if(cantiere && operaio && ore > 0){
+        assicuratiCantiere(cantiere);
+        stato.ore.push({data,cantiere,operaio,tipo,ore});
+        count++;
+      } else {
+        saltate++;
+      }
+    });
+    salva(); render();
+    alert("Importate " + count + " righe ore dalla colonna Quantite/Ore." + (saltate ? " Righe saltate: " + saltate + "." : ""));
+  };
+  reader.readAsText(file, "UTF-8");
+}
+
+function datiCantiere(){
+  const c = stato.cantiereAttivo || cantieri()[0] || "";
+  if(c){ assicuratiCantiere(c); stato.cantiereAttivo = c; }
+  return c;
+}
+
+function sommaOre(c,tipo){
+  const manuali = {};
+  let importate = 0;
+  stato.ore.filter(r=>r.cantiere===c && r.tipo===tipo).forEach(r=>{
+    const isManualeTotale = r.origine === "manuale_totale" || r.origine == null;
+    if(isManualeTotale){
+      const key = String(r.operaio || "").trim().toLowerCase() || "senza_nome";
+      manuali[key] = Number(r.ore || 0);
+    } else {
+      importate += Number(r.ore || 0);
+    }
+  });
+  return Object.values(manuali).reduce((s,v)=>s+Number(v||0),0) + importate;
+}
+function sommaMat(c,tipo){ return stato.materiali.filter(r=>r.cantiere===c && r.tipo===tipo).reduce((s,r)=>s+Number(r.costo||0),0); }
+function fmt(n){ const x=Number(n)||0; return x.toLocaleString("it-CH",{maximumFractionDigits:2,minimumFractionDigits:x%1?2:0}); }
+function fmtPct(n){ const x=Number(n)||0; return x.toLocaleString("it-CH",{maximumFractionDigits:1,minimumFractionDigits:1}) + "%"; }
+function clsNum(n){ return Number(n) < 0 ? "negative" : "positive"; }
+function getPreventivo(c,tipo){ return Number(((stato.preventivi[c]||{})[tipo]) || 0); }
+function sommaPreventivi(c){ return TIPI.reduce((s,t)=>s + getPreventivo(c,t.key), 0); }
+function costoOraTipo(c,tipo){ return tipo === "dividere" ? 20 : (stato.costiOra[c] || 60); }
+function costoOreTipo(c,tipo){ return sommaOre(c,tipo) * costoOraTipo(c,tipo); }
+function speseTipo(c,tipo){ return costoOreTipo(c,tipo) + sommaMat(c,tipo); }
+function sommaCostoOre(c){ return TIPI.reduce((s,t)=>s + costoOreTipo(c,t.key), 0); }
+function sommaMateriali(c){ return TIPI.reduce((s,t)=>s + sommaMat(c,t.key), 0); }
+function sommaSpese(c){ return sommaCostoOre(c) + sommaMateriali(c); }
+function totaleGenerale(c){ return Number(stato.totaliGenerali[c] || 0); }
+function rimanenteAssegnare(c){ return totaleGenerale(c) - sommaPreventivi(c); }
+function margineDaTotale(c){ return totaleGenerale(c) - sommaSpese(c); }
+function marginePct(c){ const t = totaleGenerale(c); return t > 0 ? (margineDaTotale(c) / t) * 100 : 0; }
+function margineTipo(c,tipo){ return getPreventivo(c,tipo) - speseTipo(c,tipo); }
+function marginePctTipo(c,tipo){ const p = getPreventivo(c,tipo); return p > 0 ? (margineTipo(c,tipo) / p) * 100 : 0; }
+
+function renderSelectCantieri(){
+  const cs = cantieri();
+  const sel = document.getElementById("cantiereAttivo");
+  if(stato.cantiereAttivo && isTerminato(stato.cantiereAttivo)) stato.cantiereAttivo = "";
+  if(cs.length && !stato.cantiereAttivo) stato.cantiereAttivo = cs[0];
+  sel.innerHTML = cs.map(c=>`<option value="${c}">${c}</option>`).join("");
+  sel.value = stato.cantiereAttivo || "";
+  document.getElementById("badgeCantiere").textContent = stato.cantiereAttivo || "nessun cantiere";
+  document.getElementById("costoOra").value = stato.costiOra[stato.cantiereAttivo] || 60;
+  document.getElementById("cantiereOre").value = stato.cantiereAttivo || "";
+  document.getElementById("cantiereMat").value = stato.cantiereAttivo || "";
+  const tg = document.getElementById("totaleGenerale");
+  if(tg) tg.value = stato.cantiereAttivo ? (stato.totaliGenerali[stato.cantiereAttivo] || 0) : 0;
+}
+
+function renderRiepilogo(){
+  const c = datiCantiere();
+  const costoOra = stato.costiOra[c] || 60;
+  const header = `<tr><th></th>${TIPI.map(t=>`<th class="${t.cls}">${t.label}</th>`).join("")}</tr>`;
+  const ore = `<tr><td>Ore operai</td>${TIPI.map(t=>`<td class="${t.cls}">${fmt(sommaOre(c,t.key))}</td>`).join("")}</tr>`;
+  const costo = `<tr><td>Costo ora</td>${TIPI.map(t=>`<td class="${t.cls}">${fmt(t.key==="dividere"?20:costoOra)}</td>`).join("")}</tr>`;
+  const totaleOre = `<tr class="total"><td>Totale ore CHF</td>${TIPI.map(t=>`<td>${fmt(costoOreTipo(c,t.key))}</td>`).join("")}</tr>`;
+  const mat = `<tr><td>Materiale CHF</td>${TIPI.map(t=>`<td class="${t.cls}">${fmt(sommaMat(c,t.key))}</td>`).join("")}</tr>`;
+  const spese = `<tr><td>Ore + materiale CHF</td>${TIPI.map(t=>`<td class="${t.cls}">${fmt(speseTipo(c,t.key))}</td>`).join("")}</tr>`;
+  const prev = `<tr><td>Totale lavorazione CHF</td>${TIPI.map(t=>`<td class="${t.cls}">${fmt(getPreventivo(c,t.key))}</td>`).join("")}</tr>`;
+  const margine = `<tr><td>Margine lavorazione CHF</td>${TIPI.map(t=>{
+    const m = margineTipo(c,t.key);
+    return `<td class="${t.cls} ${clsNum(m)}">${fmt(m)}</td>`;
+  }).join("")}</tr>`;
+  const marginePercento = `<tr><td>% margine lavorazione</td>${TIPI.map(t=>{
+    const m = marginePctTipo(c,t.key);
+    return `<td class="${t.cls} ${clsNum(m)}">${fmtPct(m)}</td>`;
+  }).join("")}</tr>`;
+  const totaleLavorazioni = sommaPreventivi(c);
+  const totaleCantiere = totaleGenerale(c);
+  const rimanente = rimanenteAssegnare(c);
+  const costiTotali = sommaSpese(c);
+  const margineTotale = margineDaTotale(c);
+  const mp = marginePct(c);
+  const colspan = TIPI.length;
+  const righeTotali = `
+    <tr><td>Totale cantiere inserito CHF</td><td colspan="${colspan}">${fmt(totaleCantiere)}</td></tr>
+    <tr><td>Scalato lavorazioni CHF</td><td colspan="${colspan}">${fmt(totaleLavorazioni)}</td></tr>
+    <tr class="total"><td>Rimanente dal totale generale CHF</td><td colspan="${colspan}" class="${clsNum(rimanente)}">${fmt(rimanente)}</td></tr>
+    <tr><td>Costi totali ore + materiali CHF</td><td colspan="${colspan}">${fmt(costiTotali)}</td></tr>
+    <tr class="total"><td>Margine totale CHF</td><td colspan="${colspan}" class="${clsNum(margineTotale)}">${fmt(margineTotale)}</td></tr>
+    <tr class="total"><td>% margine totale</td><td colspan="${colspan}" class="${clsNum(mp)}">${fmtPct(mp)}</td></tr>`;
+  document.getElementById("riepilogo").innerHTML = header + ore + costo + totaleOre + mat + spese + prev + margine + marginePercento + righeTotali;
+}
+
+
+function totaliCantiere(c){
+  const ore = TIPI.reduce((s,t)=>s + sommaOre(c,t.key), 0);
+  const costoOre = sommaCostoOre(c);
+  const materiale = sommaMateriali(c);
+  const preventivo = sommaPreventivi(c);
+  const totale = totaleGenerale(c);
+  const rimanente = rimanenteAssegnare(c);
+  const spese = costoOre + materiale;
+  const margine = totale - spese;
+  const percentuale = totale > 0 ? (margine / totale) * 100 : 0;
+  return {ore, costoOre, materiale, preventivo, totale, rimanente, spese, margine, percentuale};
+}
+
+
+function renderTuttiCantieri(){
+  const cs = cantieri();
+  let tot = {ore:0, costoOre:0, materiale:0, preventivo:0, totale:0, rimanente:0, spese:0, margine:0};
+  const righe = cs.map(c=>{
+    const t = totaliCantiere(c);
+    tot.ore += t.ore;
+    tot.costoOre += t.costoOre;
+    tot.materiale += t.materiale;
+    tot.preventivo += t.preventivo;
+    tot.totale += t.totale;
+    tot.rimanente += t.rimanente; // resta calcolato internamente, ma non viene mostrato nella lista
+    tot.spese += t.spese;
+    tot.margine += t.margine;
+    return `<tr><td>${c}</td><td class="num">${fmt(t.ore)}</td><td class="num">${fmt(t.costoOre)}</td><td class="num">${fmt(t.materiale)}</td><td class="num">${fmt(t.spese)}</td><td class="num">${fmt(t.totale)}</td><td class="num ${clsNum(t.margine)}">${fmt(t.margine)}</td><td class="num ${clsNum(t.percentuale)}">${fmtPct(t.percentuale)}</td></tr>`;
+  }).join("");
+  const totPct = tot.totale > 0 ? (tot.margine / tot.totale) * 100 : 0;
+  document.getElementById("tuttiCantieri").innerHTML =
+    `<tr><th>Cantiere</th><th>Ore</th><th>Costo ore CHF</th><th>Materiali CHF</th><th>Costi CHF</th><th>Totale generale CHF</th><th>Margine CHF</th><th>% margine</th></tr>` +
+    (righe || `<tr><td colspan="8">Nessun cantiere inserito.</td></tr>`) +
+    `<tr class="total"><td>TOTALE</td><td class="num">${fmt(tot.ore)}</td><td class="num">${fmt(tot.costoOre)}</td><td class="num">${fmt(tot.materiale)}</td><td class="num">${fmt(tot.spese)}</td><td class="num">${fmt(tot.totale)}</td><td class="num ${clsNum(tot.margine)}">${fmt(tot.margine)}</td><td class="num ${clsNum(totPct)}">${fmtPct(totPct)}</td></tr>`;
+}
+
+
+function renderCantieriTerminati(){
+  const table = document.getElementById("cantieriTerminatiAnnui");
+  if(!table) return;
+  const header = `<tr><th>Anno</th><th>Data chiusura</th><th>Cantiere</th><th>Ore</th><th>Costo ore CHF</th><th>Materiali CHF</th><th>Costi CHF</th><th>Totale generale CHF</th><th>Margine CHF</th><th>% margine</th><th>Azione</th></tr>`;
+  const names = Object.keys(stato.cantieriTerminati || {}).sort((a,b)=>{
+    const aa = (stato.cantieriTerminati[a]||{}).anno || 0;
+    const bb = (stato.cantieriTerminati[b]||{}).anno || 0;
+    if(bb !== aa) return bb - aa;
+    return a.localeCompare(b);
+  });
+  if(!names.length){
+    table.innerHTML = header + `<tr><td colspan="11">Nessun cantiere terminato.</td></tr>`;
+    return;
+  }
+  let currentYear = null;
+  let tot = {ore:0, costoOre:0, materiale:0, spese:0, totale:0, margine:0};
+  const rows = names.map(c=>{
+    const info = stato.cantieriTerminati[c] || {};
+    const anno = info.anno || (info.data ? String(info.data).slice(0,4) : "");
+    const t = totaliCantiere(c);
+    tot.ore += t.ore;
+    tot.costoOre += t.costoOre;
+    tot.materiale += t.materiale;
+    tot.spese += t.spese;
+    tot.totale += t.totale;
+    tot.margine += t.margine;
+    const yearCell = anno === currentYear ? "" : anno;
+    currentYear = anno;
+    const safeName = String(c).replace(/'/g,"\'");
+    return `<tr><td>${yearCell}</td><td>${info.data || ""}</td><td>${c}</td><td class="num">${fmt(t.ore)}</td><td class="num">${fmt(t.costoOre)}</td><td class="num">${fmt(t.materiale)}</td><td class="num">${fmt(t.spese)}</td><td class="num">${fmt(t.totale)}</td><td class="num ${clsNum(t.margine)}">${fmt(t.margine)}</td><td class="num ${clsNum(t.percentuale)}">${fmtPct(t.percentuale)}</td><td><button class="secondary smallbtn" onclick="riattivaCantiere('${safeName}')">Riattiva</button></td></tr>`;
+  }).join("");
+  const totPct = tot.totale > 0 ? (tot.margine / tot.totale) * 100 : 0;
+  const totalRow = `<tr class="total"><td></td><td></td><td>TOTALE</td><td class="num">${fmt(tot.ore)}</td><td class="num">${fmt(tot.costoOre)}</td><td class="num">${fmt(tot.materiale)}</td><td class="num">${fmt(tot.spese)}</td><td class="num">${fmt(tot.totale)}</td><td class="num ${clsNum(tot.margine)}">${fmt(tot.margine)}</td><td class="num ${clsNum(totPct)}">${fmtPct(totPct)}</td><td></td></tr>`;
+  table.innerHTML = header + rows + totalRow;
+}
+
+function renderTotaliLavorazioni(){
+  const wrap = document.getElementById("totaliLavorazioni");
+  if(!wrap) return;
+  const c = datiCantiere();
+  wrap.innerHTML = TIPI.map(t=>{
+    const costi = speseTipo(c,t.key);
+    const marg = margineTipo(c,t.key);
+    const pct = marginePctTipo(c,t.key);
+    return `
+    <div class="mini-card ${t.cls}">
+      <h3>${t.label}</h3>
+      <label for="prev_${t.key}">Totale lavorazione CHF</label>
+      <input id="prev_${t.key}" type="number" min="0" step="0.05" value="${getPreventivo(c,t.key)}" oninput="aggiornaCostoLavorazioneLive(\'${t.key}\')" />
+      <button onclick="salvaPreventivo(\'${t.key}\')">Salva ${t.label}</button>
+      <p class="hint"><b>Ore + materiale:</b> CHF ${fmt(costi)}<br><b>Margine:</b> <span class="${clsNum(marg)}">CHF ${fmt(marg)}</span><br><b>% margine:</b> <span class="${clsNum(pct)}">${fmtPct(pct)}</span></p>
+    </div>`;
+  }).join("");
+}
+
+
+function renderTotaleGenerale(){
+  const c = datiCantiere();
+  const totaleLavorazioni = sommaPreventivi(c);
+  const totaleCantiere = totaleGenerale(c);
+  const rimanente = rimanenteAssegnare(c);
+  const costi = sommaSpese(c);
+  const margine = margineDaTotale(c);
+  const pct = marginePct(c);
+  const box = document.getElementById("riepilogoTotaleGenerale");
+  if(box){
+    box.innerHTML = `
+      <div class="summary-item"><div class="label">Totale cantiere</div><div class="value">CHF ${fmt(totaleCantiere)}</div></div>
+      <div class="summary-item"><div class="label">Scalato lavorazioni</div><div class="value">CHF ${fmt(totaleLavorazioni)}</div></div>
+      <div class="summary-item"><div class="label">Rimanente dal totale generale</div><div class="value ${clsNum(rimanente)}">CHF ${fmt(rimanente)}</div></div>
+      <div class="summary-item"><div class="label">Margine dopo ore/materiali</div><div class="value ${clsNum(margine)}">CHF ${fmt(margine)}</div></div>
+      <div class="summary-item"><div class="label">% margine</div><div class="value ${clsNum(pct)}">${fmtPct(pct)}</div></div>`;
+  }
+  const tg = document.getElementById("totaleGenerale");
+  if(tg) tg.value = totaleCantiere;
+}
+
+
+function renderOperai(){
+  const c = stato.cantiereAttivo;
+  const table = document.getElementById("tabellaOperai");
+  if(!table) return;
+  const costoOra = stato.costiOra[c] || 60;
+  const mappa = {};
+  stato.ore.filter(r=>!c || r.cantiere===c).forEach(r=>{
+    const nome = String(r.operaio || "Senza nome").trim() || "Senza nome";
+    if(!mappa[nome]){
+      mappa[nome] = {operaio:nome, totale:0, costo:0};
+      TIPI.forEach(t=>mappa[nome][t.key]=0);
+    }
+    const tipo = r.tipo || "altro";
+    const ore = Number(r.ore || 0);
+    const co = tipo === "dividere" ? 20 : costoOra;
+    mappa[nome][tipo] = (mappa[nome][tipo] || 0) + ore;
+    mappa[nome].totale += ore;
+    mappa[nome].costo += ore * co;
+  });
+  const operai = Object.values(mappa).sort((a,b)=>a.operaio.localeCompare(b.operaio));
+  let tot = {totale:0, costo:0};
+  TIPI.forEach(t=>tot[t.key]=0);
+  const righe = operai.map(o=>{
+    TIPI.forEach(t=>tot[t.key] += Number(o[t.key] || 0));
+    tot.totale += o.totale;
+    tot.costo += o.costo;
+    return `<tr><td>${o.operaio}</td>${TIPI.map(t=>`<td class="num ${t.cls}">${fmt(o[t.key] || 0)}</td>`).join("")}<td class="num">${fmt(o.totale)}</td><td class="num">${fmt(o.costo)}</td></tr>`;
+  }).join("");
+  table.innerHTML =
+    `<tr><th>Operaio</th>${TIPI.map(t=>`<th class="${t.cls}">${t.label}</th>`).join("")}<th>Ore totali</th><th>Costo ore CHF</th></tr>` +
+    (righe || `<tr><td colspan="${TIPI.length + 3}">Nessuna ora inserita per questo cantiere.</td></tr>`) +
+    `<tr class="total"><td>TOTALE</td>${TIPI.map(t=>`<td class="num">${fmt(tot[t.key])}</td>`).join("")}<td class="num">${fmt(tot.totale)}</td><td class="num">${fmt(tot.costo)}</td></tr>`;
+}
+
+function renderDettagli(){
+  const c = stato.cantiereAttivo;
+  document.getElementById("dettaglioOre").innerHTML =
+    `<tr><th>Data</th><th>Cantiere</th><th>Operaio</th><th>Tipo</th><th>Ore</th></tr>` +
+    stato.ore.filter(r=>!c || r.cantiere===c).map(r=>{
+      const t = TIPI.find(x=>x.key===r.tipo) || TIPI[TIPI.length-1];
+      return `<tr><td>${r.data}</td><td>${r.cantiere}</td><td>${r.operaio}</td><td>${t.label}</td><td class="num">${fmt(r.ore)}</td></tr>`;
+    }).join("");
+
+  document.getElementById("dettaglioMateriali").innerHTML =
+    `<tr><th>Data</th><th>Cantiere</th><th>Materiale</th><th>Tipo</th><th>Costo CHF</th></tr>` +
+    stato.materiali.filter(r=>!c || r.cantiere===c).map(r=>{
+      const t = TIPI.find(x=>x.key===r.tipo) || TIPI[TIPI.length-1];
+      return `<tr><td>${r.data}</td><td>${r.cantiere}</td><td>${r.descrizione}</td><td>${t.label}</td><td class="num">${fmt(r.costo)}</td></tr>`;
+    }).join("");
+}
+
+function render(){
+  renderSelectCantieri();
+  renderTotaliLavorazioni();
+  renderTotaleGenerale();
+  renderRiepilogo();
+  renderTuttiCantieri();
+  renderCantieriTerminati();
+  renderDettagli();
+  renderOperai();
+  salva();
+}
+
+function scaricaModelloOre(){
+  const csv = "data;cantiere;operaio;tipo;ore\n2026-05-21;Mezzana;Giuseppe;Costruzione a secco;4\n2026-05-21;Mezzana;Mario;Isolazione;3\n";
+  downloadFile(csv, "modello_import_ore.csv", "text/csv;charset=utf-8");
+}
+
+function esportaRiepilogoCSV(){
+  const c = stato.cantiereAttivo;
+  const costoOra = stato.costiOra[c] || 60;
+  let rows = [["Cantiere",c],[],["Tipo","Ore","Costo ora","Totale ore CHF","Materiale CHF","Totale lavorazione CHF","Margine CHF","% margine"]];
+  TIPI.forEach(t=>{
+    const co = t.key==="dividere"?20:costoOra;
+    const o = sommaOre(c,t.key);
+    const m = sommaMat(c,t.key);
+    const p = (stato.preventivi[c]||{})[t.key]||0;
+    rows.push([t.label,o,co,o*co,m,p,p-(o*co+m),fmtPct(p > 0 ? ((p-(o*co+m))/p)*100 : 0)]);
+  });
+  rows.push([], ["Totale cantiere CHF", totaleGenerale(c)], ["Scalato lavorazioni CHF", sommaPreventivi(c)], ["Rimanente dal totale generale CHF", rimanenteAssegnare(c)], ["Costi totali ore + materiali CHF", sommaSpese(c)], ["Margine totale CHF", margineDaTotale(c)], ["Percentuale margine", fmtPct(marginePct(c))]);
+  const csv = rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(";")).join("\n");
+  downloadFile(csv, "riepilogo_supporto_" + (c||"cantiere").replaceAll(" ","_") + ".csv", "text/csv;charset=utf-8");
+}
+
+function downloadFile(content, name, type){
+  const blob = new Blob([content], {type});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = name; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function resetDati(){
+  if(confirm("Cancellare solo i dati di questo supporto? Il programma ore originale non viene toccato.")){
+    localStorage.removeItem("supporto_cantieri_tipologie_v1");
+    stato = {ore:[], materiali:[], preventivi:{}, costiOra:{}, cantiereAttivo:"", cantieriManuali:[], totaliGenerali:{}, cantieriTerminati:{}};
+    render();
+  }
+}
+render();
+avviaSupabaseDaConfig();
+</script>
+</body>
+</html>

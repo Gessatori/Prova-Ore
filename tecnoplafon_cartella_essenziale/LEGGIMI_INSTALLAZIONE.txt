@@ -1,0 +1,28 @@
+CARTELLA ESSENZIALE TECNOPLAFON ORE
+
+Questa cartella contiene solo i file necessari per far funzionare il gestionale sul sito.
+
+File da caricare nella stessa cartella del sito:
+- index.html
+- admin.html
+- app.js
+- styles.css
+- config.js
+- supporto_cantieri.html
+- manifest.webmanifest
+- service-worker.js
+- cartella icons con le 4 icone
+
+Cosa ho tolto:
+- file doppi o vecchi
+- file con nomi tipo index(54).html, admin(25).html, styles(19).css
+- file README delle correzioni
+- file SQL, perché servono solo per preparare o modificare il database, non per il funzionamento quotidiano del sito
+
+Dopo il caricamento:
+1. Apri admin.html.
+2. Fai Cmd + Shift + R sul Mac.
+3. Se usi iPhone, elimina e reinstalla l'icona dalla schermata Home se resta la vecchia versione.
+
+Nota:
+La correzione Firma DL è già dentro admin.html, app.js e styles.css.

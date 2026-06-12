@@ -1,0 +1,847 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#082b63">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Tecnoplafon - Admin</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <style id="regie-a4-totali-css">
+    @media print {
+      body.print-regie-only * { visibility: hidden !important; }
+      body.print-regie-only #regiePrintArea,
+      body.print-regie-only #regiePrintArea * { visibility: visible !important; }
+      body.print-regie-only #regiePrintArea {
+        display:block !important;
+        position:absolute !important;
+        left:0 !important;
+        top:0 !important;
+        width:100% !important;
+        margin:0 !important;
+        padding:0 !important;
+        background:#fff !important;
+        color:#000 !important;
+      }
+      body.print-regie-only .topbar,
+      body.print-regie-only .tabs,
+      body.print-regie-only .filter-panel,
+      body.print-regie-only #tab-mese,
+      body.print-regie-only #adminPrintReport,
+      body.print-regie-only #adminMeseBox,
+      body.print-regie-only #adminTrasferteBox { display:none !important; }
+      body.print-regie-only .regie-day-total td {
+        font-weight:700 !important;
+        border-top:2px solid #000 !important;
+        background:#f2f2f2 !important;
+      }
+      @page { size:A4 portrait; margin:12mm; }
+    }
+
+
+    /* Stampa mese collaboratore: solo report, A4 orizzontale compatto */
+    @media print {
+      body.print-month-only * { visibility: hidden !important; }
+      body.print-month-only #adminPrintReport,
+      body.print-month-only #adminPrintReport * { visibility: visible !important; }
+      body.print-month-only #adminPrintReport {
+        display:block !important;
+        position:absolute !important;
+        left:0 !important;
+        top:0 !important;
+        width:100% !important;
+        margin:0 !important;
+        padding:0 !important;
+        background:#fff !important;
+        color:#000 !important;
+      }
+      body.print-month-only .topbar,
+      body.print-month-only .tabs,
+      body.print-month-only .filter-panel,
+      body.print-month-only #adminRiepilogo,
+      body.print-month-only #adminMeseBox,
+      body.print-month-only #adminTrasferteBox { display:none !important; }
+      body.print-month-only .print-sheet {
+        width:287mm !important;
+        min-height:auto !important;
+        margin:0 auto !important;
+        padding:3mm !important;
+        box-sizing:border-box !important;
+        font-size:6.2pt !important;
+        line-height:1.08 !important;
+        page-break-after:avoid !important;
+      }
+      body.print-month-only .print-header {
+        display:grid !important;
+        grid-template-columns:1.1fr 1.2fr 1fr !important;
+        gap:2mm !important;
+        margin-bottom:2mm !important;
+        padding-bottom:1.5mm !important;
+      }
+      body.print-month-only .print-logo-mark { width:9mm !important; height:9mm !important; font-size:7pt !important; }
+      body.print-month-only .print-logo-title { font-size:9pt !important; }
+      body.print-month-only .print-logo-sub,
+      body.print-month-only .print-company-info,
+      body.print-month-only .print-header-sub { font-size:5.5pt !important; }
+      body.print-month-only .print-header-title h1 { font-size:12pt !important; margin:0 !important; }
+      body.print-month-only .print-meta-row {
+        display:grid !important;
+        grid-template-columns:1fr 1fr 1fr !important;
+        gap:1.5mm !important;
+        margin-bottom:2mm !important;
+      }
+      body.print-month-only .print-meta-card { padding:1mm 1.5mm !important; font-size:6pt !important; }
+      body.print-month-only .print-meta-card span { font-size:5pt !important; }
+      body.print-month-only .print-meta-card b { font-size:7pt !important; }
+      body.print-month-only .print-calendar-table {
+        width:100% !important;
+        table-layout:fixed !important;
+        border-collapse:collapse !important;
+        font-size:5.4pt !important;
+        line-height:1.02 !important;
+        margin:0 0 2mm 0 !important;
+      }
+      body.print-month-only .print-calendar-table th,
+      body.print-month-only .print-calendar-table td {
+        padding:0.45mm 0.55mm !important;
+        border:0.2mm solid #999 !important;
+        vertical-align:top !important;
+        overflow:hidden !important;
+        text-overflow:ellipsis !important;
+      }
+      body.print-month-only .print-calendar-table th { font-size:5pt !important; }
+      body.print-month-only .print-calendar-table th:nth-child(1), body.print-month-only .print-calendar-table td:nth-child(1) { width:14mm !important; }
+      body.print-month-only .print-calendar-table th:nth-child(2), body.print-month-only .print-calendar-table td:nth-child(2) { width:16mm !important; }
+      body.print-month-only .print-calendar-table th:nth-child(3), body.print-month-only .print-calendar-table td:nth-child(3) { width:28mm !important; }
+      body.print-month-only .print-calendar-table th:nth-child(4), body.print-month-only .print-calendar-table td:nth-child(4) { width:10mm !important; }
+      body.print-month-only .print-calendar-table th:nth-child(5), body.print-month-only .print-calendar-table td:nth-child(5) { width:26mm !important; }
+      body.print-month-only .print-calendar-table th:nth-child(6), body.print-month-only .print-calendar-table td:nth-child(6) { width:28mm !important; }
+      body.print-month-only .print-calendar-table th:nth-child(7), body.print-month-only .print-calendar-table td:nth-child(7) { width:11mm !important; }
+      body.print-month-only .print-calendar-table th:nth-child(8), body.print-month-only .print-calendar-table td:nth-child(8) { width:20mm !important; }
+      body.print-month-only .print-calendar-table th:nth-child(9), body.print-month-only .print-calendar-table td:nth-child(9) { width:11mm !important; }
+      body.print-month-only .print-calendar-table th:nth-child(10), body.print-month-only .print-calendar-table td:nth-child(10) { width:11mm !important; }
+      body.print-month-only .print-calendar-table th:nth-child(11), body.print-month-only .print-calendar-table td:nth-child(11) { width:11mm !important; }
+      body.print-month-only .print-calendar-table th:nth-child(12), body.print-month-only .print-calendar-table td:nth-child(12) { width:15mm !important; }
+      body.print-month-only .print-calendar-table th:nth-child(13), body.print-month-only .print-calendar-table td:nth-child(13) { width:10mm !important; }
+      body.print-month-only .print-calendar-table th:nth-child(14), body.print-month-only .print-calendar-table td:nth-child(14) { width:24mm !important; }
+      body.print-month-only .print-bottom-grid {
+        display:grid !important;
+        grid-template-columns:1.1fr 0.95fr 0.95fr !important;
+        gap:2mm !important;
+        margin-top:1mm !important;
+      }
+      body.print-month-only .print-panel { padding:1.2mm !important; page-break-inside:avoid !important; }
+      body.print-month-only .print-panel-title { font-size:6pt !important; margin-bottom:1mm !important; }
+      body.print-month-only .print-summary-grid { display:grid !important; grid-template-columns:1fr 1fr 1fr 1fr !important; gap:1mm !important; }
+      body.print-month-only .print-summary-item { padding:0.8mm !important; }
+      body.print-month-only .print-summary-item span { font-size:5pt !important; }
+      body.print-month-only .print-summary-item b { font-size:7pt !important; }
+      body.print-month-only .print-small-table { font-size:5.4pt !important; }
+      body.print-month-only .print-small-table th,
+      body.print-month-only .print-small-table td { padding:0.5mm !important; }
+      body.print-month-only .print-rules-list { margin:0 !important; padding-left:3mm !important; font-size:5.3pt !important; }
+      body.print-month-only .print-signatures {
+        display:grid !important;
+        grid-template-columns:1fr 1fr 1fr 1fr !important;
+        gap:2mm !important;
+        margin-top:2mm !important;
+        font-size:5.5pt !important;
+      }
+      body.print-month-only .sig-box span { height:5mm !important; }
+    }
+
+
+    /* Integrazione Supporto Cantieri: schermata interna da Admin */
+    .supporto-cantieri-overlay{
+      position:fixed; inset:0; z-index:99999; display:none;
+      background:#f5f7fa;
+    }
+    .supporto-cantieri-overlay.open{display:flex; flex-direction:column;}
+    .supporto-cantieri-bar{
+      height:64px; flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:0 18px; background:#071827; color:#fff; box-shadow:0 10px 30px rgba(7,24,39,.18);
+    }
+    .supporto-cantieri-bar b{font-size:18px;}
+    .supporto-cantieri-actions{display:flex; gap:10px; align-items:center;}
+    .supporto-cantieri-actions button{margin-top:0; width:auto;}
+    .supporto-cantieri-frame{width:100%; height:calc(100vh - 64px); border:0; background:white;}
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+</head>
+<body data-page="admin">
+  <header class="topbar">
+    <div class="brand"><div class="logo">TP</div><div><b>Tecnoplafon</b><span>Admin gestione ore</span></div></div>
+    <button class="ghost" onclick="location.href='index.html'">Area collaboratore</button>
+  </header>
+
+  <main class="container">
+    <section id="adminLoginBox" class="card narrow">
+      <h1>Accesso admin</h1>
+      <label>Password admin</label>
+      <input id="adminPass" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter') loginAdmin()">
+      <button onclick="loginAdmin()">Entra admin</button>
+      <div id="adminLoginMsg"></div>
+    </section>
+
+    <section id="adminBox" class="hidden">
+      <div class="page-title">
+        <div>
+          <h1>Area admin</h1>
+          <p>Dashboard, collaboratori, cantieri, ore, richieste e stampe.</p>
+        </div>
+        <button class="secondary" onclick="logout()">Esci</button>
+      </div>
+
+      <nav class="tabs">
+        <button onclick="showAdminTab('dash')" class="active">Dashboard oggi</button>
+        <button onclick="showAdminTab('mese')">Mese collaboratore</button>
+        <button onclick="showAdminTab('ore')">Gestione ore</button>
+        <button onclick="showAdminTab('regie')">Regie / Firme</button>
+        <button onclick="showAdminTab('richieste')">Richieste vacanze</button>
+        <button onclick="showAdminTab('materiale')">Richieste materiale <span id="materialeBadge" style="display:none;align-items:center;justify-content:center;min-width:22px;height:22px;margin-left:6px;padding:0 6px;border-radius:999px;background:#d71920;color:white;font-weight:800;font-size:12px;vertical-align:middle;">0</span></button>
+        <button onclick="showAdminTab('vacanze')">Saldo vacanze</button>
+        <button onclick="showAdminTab('anagrafiche')">Collaboratori / Cantieri</button>
+        <button onclick="showAdminTab('lavorazioni')">Lavorazioni</button>
+        <button onclick="showAdminTab('regole')">Regole calendario</button>
+        <button onclick="showAdminTab('calendario')">Calendario annuale</button>
+        <button type="button" onclick="apriSupportoCantieri()">Supporto cantieri</button>
+      </nav>
+
+      <div id="supportoCantieriOverlay" class="supporto-cantieri-overlay" aria-hidden="true">
+        <div class="supporto-cantieri-bar">
+          <div>
+            <b>Supporto cantieri</b>
+            <span style="opacity:.78;margin-left:10px">aperto dentro Admin gestione ore</span>
+          </div>
+          <div class="supporto-cantieri-actions">
+            <button type="button" class="secondary" onclick="ricaricaSupportoCantieri()">Ricarica</button>
+            <button type="button" onclick="chiudiSupportoCantieri()">Torna alla gestione ore</button>
+          </div>
+        </div>
+        <iframe id="supportoCantieriFrame" class="supporto-cantieri-frame" src="supporto_cantieri.html" title="Supporto cantieri Tecnoplafon"></iframe>
+      </div>
+
+
+      <section id="tab-calendario" class="admin-tab hidden">
+        <section class="card">
+          <h2>Calendario annuale</h2>
+          <p class="muted">
+            Procedura guidata: crea anno, inserisci festivi, inserisci orario invernale/estivo,
+            applica regole e controlla i totali mese.
+          </p>
+          <div class="row">
+            <input id="calAnno" type="number" value="2026">
+            <button onclick="creaCalendarioAnno()">1. Crea calendario anno</button>
+            <button class="secondary" onclick="caricaCalendarioAnno()">Carica calendario</button>
+            <button class="secondary" onclick="caricaRiepilogoCalendarioAnno()">Controlla totali mese</button>
+            <button class="secondary" onclick="eliminaCalendarioAnno()">Elimina calendario anno</button>
+          </div>
+          <div id="calMsg"></div>
+        </section>
+
+        <section class="card">
+          <h2>Giorni festivi ufficiali</h2>
+          <p class="muted">I festivi vengono impostati a 0 ore e bloccano l’inserimento ore, salvo modifica manuale admin.</p>
+          <div class="grid four">
+            <div><label>Data festivo</label><input id="festivoData" type="date"></div>
+            <div><label>Nome festivo</label><input id="festivoNome" placeholder="es. Corpus Domini"></div>
+            <div><label>Ore da fare</label><input id="festivoOre" type="number" step="0.25" value="0"></div>
+            <div><label>Consenti ore collaboratore</label>
+              <select id="festivoConsenti">
+                <option value="false">No</option>
+                <option value="true">Sì</option>
+              </select>
+            </div>
+          </div>
+          <button onclick="salvaFestivo()">Salva festivo</button>
+          <button class="secondary" onclick="caricaFestivi()">Aggiorna lista festivi</button>
+          <div id="festivoMsg"></div>
+          <div id="festiviBox" class="table-wrap"></div>
+        </section>
+
+        <section class="card">
+          <h2>Regole orarie per periodo</h2>
+          <p class="muted">
+            Crea periodi tipo inverno/estate. Poi premi “Applica tutte le regole all’anno”.
+            I giorni speciali manuali non vengono toccati.
+          </p>
+          <div class="grid four">
+            <div><label>Nome regola</label><input id="periodoNome" placeholder="Orario estivo"></div>
+            <div><label>Tipo</label>
+              <select id="periodoTipo">
+                <option value="normale">normale / inverno</option>
+                <option value="estivo">estivo</option>
+                <option value="personalizzato">personalizzato</option>
+              </select>
+            </div>
+            <div><label>Da data</label><input id="periodoDa" type="date"></div>
+            <div><label>A data</label><input id="periodoA" type="date"></div>
+            <div><label>Ore lunedì - giovedì</label><input id="periodoOreLunGio" type="number" step="0.25"></div>
+            <div><label>Ore venerdì</label><input id="periodoOreVenerdi" type="number" step="0.25"></div>
+            <div><label>Ore prefestivo</label><input id="periodoOrePrefestivo" type="number" step="0.25"></div>
+            <div><label>Ora inizio</label><input id="periodoInizio" type="time" value="07:30"></div>
+            <div><label>Pausa inizio</label><input id="periodoPausaInizio" type="time" value="12:00"></div>
+            <div><label>Pausa fine</label><input id="periodoPausaFine" type="time" value="13:00"></div>
+            <div><label>Fine lunedì - giovedì</label><input id="periodoFineLunGio" type="time" placeholder="es. 16:30"></div>
+            <div><label>Fine venerdì</label><input id="periodoFineVenerdi" type="time" placeholder="es. 16:00"></div>
+            <div><label>Fine prefestivo</label><input id="periodoFinePrefestivo" type="time" placeholder="es. 16:00"></div>
+          </div>
+          <div class="preset-row">
+            <button class="secondary" onclick="presetPeriodoInverno()">Preset inverno 8 / 7.50</button>
+            <button class="secondary" onclick="presetPeriodoEstivo()">Preset estivo 8.50 / 8</button>
+            <button onclick="salvaRegolaPeriodo()">Salva periodo</button>
+            <button onclick="applicaRegoleAnnuali()">Applica tutte le regole all’anno</button>
+            <button class="secondary" onclick="eliminaTutteRegolePeriodoAnno()">Elimina regole inserite</button>
+          </div>
+          <div id="periodoMsg"></div>
+          <div id="periodiBox" class="table-wrap"></div>
+        </section>
+
+        <section class="card">
+          <h2>Correzione manuale singolo giorno</h2>
+          <p class="muted">Usa questa parte per prefestivi particolari, chiusure aziendali o giornate speciali. Questi giorni non vengono più sovrascritti dalle regole automatiche.</p>
+          <div class="grid four">
+            <div><label>Data</label><input id="manualData" type="date" onchange="caricaGiornoManuale()"></div>
+            <div><label>Tipo giorno</label>
+              <select id="manualTipo">
+                <option value="lavorativo">lavorativo</option>
+                <option value="sabato">sabato</option>
+                <option value="domenica">domenica</option>
+                <option value="festivo">festivo</option>
+                <option value="giorno_speciale">giorno_speciale</option>
+                <option value="chiusura_aziendale">chiusura_aziendale</option>
+              </select>
+            </div>
+            <div><label>Ore da fare</label><input id="manualOre" type="number" step="0.25"></div>
+            <div><label>Max ore inseribili</label><input id="manualMaxOre" type="number" step="0.25"></div>
+            <div><label>Ora inizio</label><input id="manualInizio" type="time"></div>
+            <div><label>Pausa inizio</label><input id="manualPausaInizio" type="time"></div>
+            <div><label>Pausa fine</label><input id="manualPausaFine" type="time"></div>
+            <div><label>Ora fine</label><input id="manualFine" type="time"></div>
+          </div>
+          <label>Nota regola</label><input id="manualNote" placeholder="es. chiusura anticipata / giorno speciale">
+          <label><input id="manualConsenti" type="checkbox"> Consenti inserimento ore collaboratore se ore da fare = 0</label>
+          <button onclick="salvaGiornoManuale()">Salva giorno speciale/manuale</button>
+          <div id="manualMsg"></div>
+        </section>
+
+        <section class="card">
+          <h2>Totali calendario</h2>
+          <p class="muted">Totale calcolato dai giorni del calendario. Il totale ufficiale del mese resta quello in regole_mensili, se inserito dall’admin.</p>
+          <div id="calRiepilogoBox" class="table-wrap"></div>
+        </section>
+
+        <section class="card">
+          <h2>Vista giorni calendario</h2>
+          <div class="row">
+            <select id="calMeseVista" onchange="caricaCalendarioAnno()"></select>
+            <button class="secondary" onclick="caricaCalendarioAnno()">Aggiorna mese</button>
+          </div>
+          <div id="calGiorniBox" class="table-wrap"></div>
+        </section>
+      </section>
+
+      <section id="tab-dash" class="admin-tab">
+        <div class="card">
+          <div class="row between">
+            <div>
+              <h2>Controllo ore del giorno</h2>
+              <p class="muted">Verde = ore segnate · Rosso = mancano ore · Giallo = richiesta · Grigio = non lavorativo.</p>
+            </div>
+            <input id="dashDate" type="date" onchange="caricaDashboard()">
+          </div>
+          <div id="dayInfo" class="status-note"></div>
+          <div id="collabStatusList" class="people-list"></div>
+        </div>
+        <div id="collabDayDetail" class="card hidden"></div>
+      </section>
+
+      <section id="tab-mese" class="admin-tab hidden">
+        <div class="card">
+          <h2>Stampa mensile collaboratore</h2>
+          <div class="filter-panel">
+            <h3>Ricerca stampa mensile</h3>
+            <div class="grid three">
+              <div><label>Collaboratore</label><select id="adminCollabMese"></select></div>
+              <div><label>Anno</label><input id="adminAnno" type="number" value="2026"></div>
+              <div><label>Mese</label><select id="adminMese"></select></div>
+              <div><label>Dal giorno</label><input id="filtroMeseDal" type="date" onchange="filtraRiepilogoMeseVisibile()"></div>
+              <div><label>Al giorno</label><input id="filtroMeseAl" type="date" onchange="filtraRiepilogoMeseVisibile()"></div>
+              <div><label>Cerca nelle note</label><input id="filtroMeseTesto" placeholder="Opzionale..." oninput="filtraRiepilogoMeseVisibile()"></div>
+            </div>
+            <div class="row">
+              <button onclick="caricaMeseAdmin()">Crea riepilogo</button>
+              <button class="secondary" onclick="stampaMeseCollaboratoreA4()">Stampa A4 orizzontale</button>
+            </div>
+            <div id="contaFiltriMeseStampa" class="filter-count">Se vuoi, imposta Dal/Al giorno dopo aver creato il riepilogo.</div>
+          </div>
+          <div id="adminRiepilogo"></div>
+          <div id="adminMeseBox" class="table-wrap"></div>
+          <div id="adminTrasferteBox" class="table-wrap"></div>
+          <div id="adminPrintReport" class="print-report-screen hidden"></div>
+        </div>
+      </section>
+
+      <section id="tab-ore" class="admin-tab hidden">
+        <div class="card">
+          <h2>Gestione ore</h2>
+          <p class="muted">L’admin può inserire o correggere ore anche per giorni passati.</p>
+          <div class="filter-panel">
+            <h3>Inserimento ore</h3>
+            <div class="filter-count">Seleziona direttamente collaboratore, data, cantiere, lavorazione e sotto-lavorazione.</div>
+          </div>
+          <div class="grid three">
+            <div><label>Collaboratore</label><select id="admOreCollab"></select></div>
+            <div><label>Data</label><input id="admOreData" type="date"></div>
+            <div><label>Ore totali</label><input id="admOreTot" type="number" step="0.25"></div>
+            <div><label>Cantiere</label><select id="admOreCantiere"></select></div>
+            <div><label>Lavorazione</label><select id="admOreLav"></select></div>
+            <div><label>Sotto-lavorazione</label><select id="admOreSotto"></select></div>
+          </div>
+          <label>Note</label><textarea id="admOreNote" rows="2"></textarea>
+          <div class="row">
+            <button onclick="adminSalvaOre()">Salva ore come admin</button>
+            <button class="secondary" onclick="caricaOreAdminCollaboratore()">Carica ore collaboratore</button>
+          </div>
+          <div id="admOreMsg"></div>
+        </div>
+
+        <div class="card">
+          <h2>Ore caricate collaboratore</h2>
+          <p class="muted">Seleziona collaboratore e data, poi premi Carica ore collaboratore per vedere il dettaglio delle ore già inserite.</p>
+          <div id="admOreLista" class="table-wrap"></div>
+        </div>
+      </section>
+
+
+      <section id="tab-regie" class="admin-tab hidden">
+        <div class="card">
+          <h2>Ricerca regie per firma</h2>
+          <p class="muted">
+            Cerca per cantiere, operaio, date e lavorazioni. Poi stampa il foglio regie da far firmare.
+          </p>
+
+          <div class="filter-panel">
+            <h3>Filtri ricerca</h3>
+            <div class="grid four">
+              <div>
+                <label>Dal giorno</label>
+                <input id="regieDataDal" type="date">
+              </div>
+              <div>
+                <label>Al giorno</label>
+                <input id="regieDataAl" type="date">
+              </div>
+              <div>
+                <label>Operaio / collaboratore</label>
+                <select id="regieCollaboratore"></select>
+              </div>
+              <div>
+                <label>Cantiere</label>
+                <select id="regieCantiere"></select>
+              </div>
+              <div>
+                <label>Lavorazione</label>
+                <select id="regieLavorazione"></select>
+              </div>
+              <div>
+                <label>Sotto-lavorazione</label>
+                <select id="regieSottoLavorazione"></select>
+              </div>
+              <div>
+                <label>Testo libero</label>
+                <input id="regieTesto" placeholder="Note, cantiere, lavorazione...">
+              </div>
+              <div>
+                <label>Raggruppa stampa</label>
+                <select id="regieGruppo">
+                  <option value="giorno">Per giorno</option>
+                  <option value="collaboratore">Per collaboratore</option>
+                  <option value="cantiere">Per cantiere</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <button onclick="cercaRegieFirma()">Carica</button>
+              <button class="secondary" onclick="stampaRegieFirmaConTotali()">Stampa regie A4</button>
+              <button class="ghost" onclick="resetRegieFirma()">Pulisci filtri</button>
+            </div>
+
+            <div id="regieMsg"></div>
+          </div>
+
+          <div id="regieRiepilogo" class="summary"></div>
+          <div id="regieRisultati" class="table-wrap"></div>
+          <div id="regiePrintArea" class="print-report-screen hidden"></div>
+        </div>
+      </section>
+
+      <section id="tab-richieste" class="admin-tab hidden">
+        <div class="card">
+          <h2>Richieste vacanze / congedo</h2>
+          <button onclick="caricaRichiesteAdmin()">Aggiorna</button>
+          <div id="adminRichiesteBox" class="table-wrap"></div>
+        </div>
+      </section>
+
+
+      <section id="tab-materiale" class="admin-tab hidden">
+        <div class="card">
+          <h2>Richieste materiale</h2>
+          <p class="muted">Qui vedi le richieste materiale inviate dai collaboratori, anche quelle dettate con voce.</p>
+          <button onclick="caricaMaterialeAdmin()">Carica richieste materiale</button>
+          <div id="adminMaterialeMsg"></div>
+          <div id="adminMaterialeBox" class="table-wrap"></div>
+        </div>
+      </section>
+
+      <section id="tab-vacanze" class="admin-tab hidden">
+        <div class="card">
+          <h2>Saldo vacanze collaboratori</h2>
+          <p class="muted">
+            Regola automatica: sotto 50 anni = 200 ore annue; da 50 anni in su = 240 ore annue.
+            L’admin può disattivare il calcolo automatico e inserire ore manuali.
+          </p>
+          <button onclick="caricaVacanzeAdmin()">Aggiorna saldi</button>
+          <div id="vacanzeAdminMsg"></div>
+          <div id="vacanzeAdminBox" class="table-wrap"></div>
+        </div>
+
+        <div class="card">
+          <h2>Modifica dati vacanze collaboratore</h2>
+          <div class="grid three">
+            <div><label>Collaboratore</label><select id="vacCollabSelect" onchange="caricaVacanzeCollaboratoreForm()"></select></div>
+            <div><label>Anno nascita</label><input id="vacAnnoNascita" type="number" placeholder="es. 1980"></div>
+            <div><label>Saldo iniziale anno</label><input id="vacSaldoIniziale" type="number" step="0.25" value="0"></div>
+            <div><label>Ore vacanza annue manuali</label><input id="vacOreAnnue" type="number" step="0.25" placeholder="es. 200 oppure 240"></div>
+            <div><label>Calcolo automatico</label>
+              <select id="vacAuto">
+                <option value="true">Sì, automatico per età</option>
+                <option value="false">No, uso ore manuali</option>
+              </select>
+            </div>
+          </div>
+          <button onclick="salvaVacanzeCollaboratore()">Salva dati vacanze</button>
+          <div id="vacFormMsg"></div>
+        </div>
+      </section>
+
+      <section id="tab-anagrafiche" class="admin-tab hidden">
+        <div class="grid two">
+          <section class="card">
+            <h2>Nuovo collaboratore</h2>
+            <label>Nome</label><input id="newColNome">
+            <label>Cognome</label><input id="newColCognome">
+            <label>Password</label><input id="newColPass">
+            <label>Stato</label><select id="newColStato"><option>attivo</option><option>terminato</option></select>
+            <button onclick="creaCollaboratore()">Crea collaboratore</button>
+            <div id="newColMsg"></div>
+          </section>
+          <section class="card">
+            <h2>Nuovo cantiere</h2>
+            <label>Nome cantiere</label><input id="newCanNome">
+            <label>Località</label><input id="newCanLocalita">
+            <label>Cliente</label><input id="newCanCliente">
+            <label>Km</label><input id="newCanKm" type="number" step="0.1">
+            <label>Stato</label><select id="newCanStato"><option>attivo</option><option>terminato</option></select>
+            <button onclick="creaCantiere()">Crea cantiere</button>
+            <div id="newCanMsg"></div>
+          </section>
+        </div>
+        <div class="grid two">
+          <section class="card"><h2>Collaboratori</h2><div id="collabTable" class="table-wrap"></div></section>
+          <section class="card"><h2>Cantieri</h2><div id="cantieriTable" class="table-wrap"></div></section>
+        </div>
+      </section>
+
+
+      <section id="tab-regole" class="admin-tab hidden">
+        <section class="card">
+          <h2>Regole calendario giornaliero</h2>
+          <p class="muted">Qui l’admin imposta gli orari e le ore da fare per ogni giorno. Queste regole vengono usate nella stampa mensile e per bloccare le ore inserite dal collaboratore.</p>
+          <div class="grid three">
+            <div><label>Data</label><input id="regData" type="date" onchange="caricaRegolaGiorno()"></div>
+            <div><label>Tipo giorno</label>
+              <select id="regTipo">
+                <option value="lavorativo">lavorativo</option>
+                <option value="sabato">sabato</option>
+                <option value="domenica">domenica</option>
+                <option value="festivo">festivo</option>
+                <option value="vacanza_aziendale">vacanza_aziendale</option>
+                <option value="chiusura_aziendale">chiusura_aziendale</option>
+                <option value="giorno_speciale">giorno_speciale</option>
+              </select>
+            </div>
+            <div><label>Nome festivo / nota giorno</label><input id="regNomeFestivo" placeholder="es. Corpus Domini"></div>
+            <div><label>Ora inizio</label><input id="regInizio" type="time"></div>
+            <div><label>Pausa inizio</label><input id="regPausaInizio" type="time"></div>
+            <div><label>Pausa fine</label><input id="regPausaFine" type="time"></div>
+            <div><label>Ora fine</label><input id="regFine" type="time"></div>
+            <div><label>Ore da fare</label><input id="regOre" type="number" step="0.25" min="0"></div>
+            <div><label>Max ore inseribili</label><input id="regMaxOre" type="number" step="0.25" min="0"></div>
+          </div>
+          <label><input id="regConsenti" type="checkbox"> Consenti inserimento ore anche se ore da fare = 0</label>
+          <label>Note admin</label><textarea id="regNote" rows="2"></textarea>
+          <button onclick="salvaRegolaGiorno()">Salva regola giorno</button>
+          <button class="secondary" onclick="impostaGiornoLavorativo()">Imposta lavorativo standard</button>
+          <button class="secondary" onclick="impostaGiornoNonLavorativo()">Imposta non lavorativo</button>
+          <div id="regMsg"></div>
+        </section>
+
+        <section class="card">
+          <h2>Regole mensili</h2>
+          <p class="muted">Regole generali del mese: ore previste, giorni lavorativi, AVS e regola km.</p>
+          <div class="row">
+            <input id="regAnno" type="number" value="2026">
+            <select id="regMese" onchange="caricaRegolaMese()"></select>
+            <button onclick="caricaRegolaMese()">Carica mese</button>
+          </div>
+          <div class="grid three">
+            <div><label>Giorni lavorativi</label><input id="regMeseGiorni" type="number" step="0.5"></div>
+            <div><label>Ore previste mese</label><input id="regMeseOre" type="number" step="0.25"></div>
+            <div><label>Ore previste giorno default</label><input id="regMeseOreGiorno" type="number" step="0.25"></div>
+            <div><label>Limite km AVS</label><input id="regAvsKm" type="number" step="0.1"></div>
+            <div><label>Percentuale AVS</label><input id="regAvsPerc" type="number" step="0.01"></div>
+            <div><label>Tipo orario</label><input id="regOrarioTipo" placeholder="normale / estivo"></div>
+          </div>
+          <label><input id="regAvsKmAttiva" type="checkbox"> Regola AVS in base ai km attiva</label>
+          <label><input id="regAvsEntro" type="checkbox"> AVS sì entro limite km</label>
+          <label><input id="regAvsFuori" type="checkbox"> AVS sì fuori limite km</label>
+          <label>Note mese</label><textarea id="regMeseNote" rows="2"></textarea>
+          <button onclick="salvaRegolaMese()">Salva regole mese</button>
+          <div id="regMeseMsg"></div>
+        </section>
+
+        <section class="card">
+          <h2>Regole indennità km</h2>
+          <p class="muted">Fasce usate per trasferte/indennità giornaliera.</p>
+          <div id="regKmBox" class="table-wrap"></div>
+          <div class="grid four">
+            <div><label>Anno</label><input id="kmAnno" type="number" value="2026"></div>
+            <div><label>Km da</label><input id="kmDa" type="number" step="0.01"></div>
+            <div><label>Km a</label><input id="kmA" type="number" step="0.01" placeholder="vuoto = oltre"></div>
+            <div><label>Importo CHF</label><input id="kmImporto" type="number" step="0.01"></div>
+          </div>
+          <label>Descrizione</label><input id="kmDesc" placeholder="es. Percorso stradale 0 - 30 km">
+          <button onclick="salvaRegolaKm()">Aggiungi / aggiorna fascia</button>
+          <div id="kmMsg"></div>
+        </section>
+      </section>
+
+      <section id="tab-lavorazioni" class="admin-tab hidden">
+        <div class="grid two">
+          <section class="card">
+            <h2>Nuova lavorazione</h2>
+            <label>Nome</label><input id="newLavNome" placeholder="es. 007 PAVIMENTI">
+            <button onclick="creaLavorazione()">Crea lavorazione</button>
+            <div id="newLavMsg"></div>
+          </section>
+          <section class="card">
+            <h2>Nuova sotto-lavorazione</h2>
+            <label>Lavorazione</label><select id="newSottoLav"></select>
+            <label>Nome sotto-lavorazione</label><input id="newSottoNome">
+            <button onclick="creaSottoLavorazione()">Crea sotto-lavorazione</button>
+            <div id="newSottoMsg"></div>
+          </section>
+        </div>
+        <section class="card"><h2>Elenco lavorazioni</h2><div id="lavTable" class="table-wrap"></div></section>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    function apriSupportoCantieri(){
+      const box = document.getElementById('supportoCantieriOverlay');
+      if(!box) return;
+      box.classList.add('open');
+      box.setAttribute('aria-hidden','false');
+    }
+    function chiudiSupportoCantieri(){
+      const box = document.getElementById('supportoCantieriOverlay');
+      if(!box) return;
+      box.classList.remove('open');
+      box.setAttribute('aria-hidden','true');
+    }
+    function ricaricaSupportoCantieri(){
+      const frame = document.getElementById('supportoCantieriFrame');
+      if(frame) frame.contentWindow.location.reload();
+    }
+  </script>
+  <script src="app.js"></script>
+
+  <script id="regie-a4-totali-script">
+    (function(){
+      function parseOreRegie(text){
+        if(!text) return 0;
+        var pulito = String(text).replace(/'/g, '').replace(/[^0-9,.-]/g, '');
+        if(!pulito) return 0;
+        var normalizzato = pulito.indexOf(',') >= 0 ? pulito.replace(/\./g, '').replace(',', '.') : pulito;
+        var val = parseFloat(normalizzato);
+        return isFinite(val) ? val : 0;
+      }
+      function fmtOreRegie(val){
+        var n = Math.round((val + 0.000001) * 100) / 100;
+        return n.toFixed(2).replace('.', ',');
+      }
+      function normalizzaDataRegie(text){
+        var t = String(text || '').replace(/^\s+|\s+$/g, '');
+        var m = t.match(/\b(\d{4})-(\d{2})-(\d{2})\b/);
+        if(m) return m[3] + '.' + m[2] + '.' + m[1];
+        m = t.match(/\b(\d{1,2})[\.\/\-](\d{1,2})[\.\/\-](\d{2,4})\b/);
+        if(m){
+          var dd = ('0' + m[1]).slice(-2);
+          var mm = ('0' + m[2]).slice(-2);
+          var yy = m[3].length === 2 ? '20' + m[3] : m[3];
+          return dd + '.' + mm + '.' + yy;
+        }
+        return '';
+      }
+      function aggiungiTotali(container){
+        if(!container) return;
+        var old = container.querySelectorAll('.regie-day-total');
+        for(var o=0; o<old.length; o++){ old[o].parentNode.removeChild(old[o]); }
+        var tables = container.querySelectorAll('table');
+        for(var ti=0; ti<tables.length; ti++){
+          var table = tables[ti];
+          var rows = Array.prototype.slice.call(table.querySelectorAll('tr'));
+          if(rows.length < 2) continue;
+          var headers = rows[0].children;
+          var dateIdx = -1, oreIdx = -1;
+          for(var h=0; h<headers.length; h++){
+            var ht = (headers[h].textContent || '').toLowerCase();
+            if(dateIdx < 0 && (ht.indexOf('data') >= 0 || ht.indexOf('giorno') >= 0)) dateIdx = h;
+            if(oreIdx < 0 && ht.indexOf('ore') >= 0) oreIdx = h;
+          }
+          if(dateIdx < 0 || oreIdx < 0 || dateIdx === oreIdx) continue;
+          var giorno = '', totale = 0, ultima = null;
+          function inserisci(){
+            if(!giorno || !ultima) return;
+            var tr = document.createElement('tr');
+            tr.className = 'regie-day-total';
+            var cols = ultima.children.length;
+            var tdLabel = document.createElement('td');
+            tdLabel.textContent = 'Totale giorno ' + giorno;
+            tdLabel.colSpan = Math.max(1, oreIdx);
+            tr.appendChild(tdLabel);
+            var tdOre = document.createElement('td');
+            tdOre.textContent = fmtOreRegie(totale) + ' ore';
+            tr.appendChild(tdOre);
+            for(var c=oreIdx+1; c<cols; c++){ tr.appendChild(document.createElement('td')); }
+            ultima.parentNode.insertBefore(tr, ultima.nextSibling);
+          }
+          for(var r=1; r<rows.length; r++){
+            var cells = rows[r].children;
+            if(cells.length <= Math.max(dateIdx, oreIdx)) continue;
+            var g = normalizzaDataRegie(cells[dateIdx].textContent || '');
+            if(!g) continue;
+            if(giorno && g !== giorno){ inserisci(); totale = 0; }
+            giorno = g;
+            totale += parseOreRegie(cells[oreIdx].textContent || '0');
+            ultima = rows[r];
+          }
+          inserisci();
+        }
+      }
+      function assicuraFirmaDLRegie(printArea){
+        if(!printArea) return;
+        var groups = printArea.querySelectorAll('.regie-group');
+        var targets = groups.length ? Array.from(groups) : [printArea];
+        targets.forEach(function(target){
+          var sig = target.querySelector('.regie-signatures');
+          if(!sig){
+            sig = document.createElement('div');
+            sig.className = 'regie-signatures firma-dl-ready';
+            sig.innerHTML = '<div class="firma-operaio">Firma operaio / responsabile<br><span></span></div><div class="firma-dl-box"><b>Firma DL</b><br><small>Direzione lavori</small><span></span></div><div class="firma-admin">Firma admin / ditta<br><span></span></div><div class="firma-data">Data<br><span></span></div>';
+            target.appendChild(sig);
+          }
+          sig.style.display = 'grid';
+          sig.style.gridTemplateColumns = '1fr 1fr 1fr 120px';
+          sig.style.gap = '18px';
+          sig.style.marginTop = '18px';
+          var text = (sig.textContent || '').toLowerCase();
+          if(text.indexOf('firma dl') === -1 && text.indexOf('direzione lavori') === -1){
+            var box = document.createElement('div');
+            box.className = 'firma-dl-box';
+            box.innerHTML = '<b>Firma DL</b><br><small>Direzione lavori</small><span></span>';
+            if(sig.children.length >= 1) sig.insertBefore(box, sig.children[1]);
+            else sig.appendChild(box);
+          }
+          var dl = sig.querySelector('.firma-dl-box') || Array.from(sig.children).find(function(x){ return /firma\s*dl|direzione lavori/i.test(x.textContent || ''); });
+          if(dl){
+            dl.classList.add('firma-dl-box');
+            dl.style.border = '1px solid #111827';
+            dl.style.padding = '6px 8px';
+            dl.style.background = '#fff';
+            dl.style.color = '#000';
+          }
+          Array.from(sig.querySelectorAll('span')).forEach(function(line){
+            line.style.display = 'block';
+            line.style.height = '26px';
+            line.style.borderBottom = '1.5px solid #111827';
+            line.style.marginTop = '8px';
+          });
+        });
+      }
+
+      window.stampaRegieFirmaConTotali = function(){
+        var printArea = document.getElementById('regiePrintArea');
+        var riepilogo = document.getElementById('regieRiepilogo');
+        var risultati = document.getElementById('regieRisultati');
+        if(!printArea){
+          if(typeof window.stampaRegieFirma === 'function') window.stampaRegieFirma();
+          else window.print();
+          return;
+        }
+        var html = printArea.innerHTML || '';
+        if(!html.replace(/\s/g, '')){
+          var oggi = new Date().toLocaleDateString('it-CH');
+          printArea.innerHTML = '<div class="print-title"><h1>Regie per firma</h1><p>Stampa del '+oggi+'</p></div>' +
+            (riepilogo ? riepilogo.innerHTML : '') +
+            (risultati ? risultati.innerHTML : '') +
+            '<div class="regie-signatures firma-dl-ready" style="margin-top:24px; display:grid; grid-template-columns:1fr 1fr 1fr 120px; gap:18px;"><div>Firma responsabile<br><span></span></div><div class="firma-dl-box"><b>Firma DL</b><br><small>Direzione lavori</small><span></span></div><div>Firma cliente<br><span></span></div><div>Data<br><span></span></div></div>';
+        }
+        assicuraFirmaDLRegie(printArea);
+        aggiungiTotali(printArea);
+        assicuraFirmaDLRegie(printArea);
+        printArea.classList.remove('hidden');
+        document.body.classList.add('print-regie-only');
+        var pulisci = function(){
+          document.body.classList.remove('print-regie-only');
+          printArea.classList.add('hidden');
+          window.removeEventListener('afterprint', pulisci);
+        };
+        window.addEventListener('afterprint', pulisci);
+        window.print();
+        setTimeout(pulisci, 1200);
+      };
+    })();
+
+      window.stampaMeseCollaboratoreA4 = function(){
+        var report = document.getElementById('adminPrintReport');
+        if(!report || !report.innerHTML.replace(/\s/g,'')){
+          alert('Prima crea il riepilogo del mese collaboratore.');
+          return;
+        }
+        report.classList.remove('hidden');
+        document.body.classList.add('print-month-only');
+        var style = document.createElement('style');
+        style.id = 'monthly-a4-landscape-page';
+        style.textContent = '@media print { @page { size: A4 landscape; margin: 5mm; } }';
+        document.head.appendChild(style);
+        var pulisciMese = function(){
+          document.body.classList.remove('print-month-only');
+          var st = document.getElementById('monthly-a4-landscape-page');
+          if(st) st.remove();
+          window.removeEventListener('afterprint', pulisciMese);
+        };
+        window.addEventListener('afterprint', pulisciMese);
+        window.print();
+        setTimeout(pulisciMese, 1200);
+      };
+  </script>
+
+</body>
+</html>
